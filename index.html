@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,7 +7,7 @@
 
 <meta name="description" content="HOPEX — Amsterdam based producer and DJ. Electronic, trap and future bass. Latest releases on Spotify and YouTube.">
 <meta name="theme-color" content="#000000">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://hopex.ai/">
 
 <meta property="og:type" content="website">
@@ -15,16 +15,20 @@
 <meta property="og:title" content="HOPEX">
 <meta property="og:description" content="Amsterdam based producer and DJ. Electronic / trap / future bass.">
 <meta property="og:url" content="https://hopex.ai/">
+<meta property="og:image" content="assets/img/hopex-og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@prodhopex">
 <meta name="twitter:title" content="HOPEX">
 <meta name="twitter:description" content="Amsterdam based producer and DJ. Electronic / trap / future bass.">
+<meta name="twitter:image" content="assets/img/hopex-og.png">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='50' font-family='Helvetica,Arial,sans-serif' font-size='62' font-weight='900' fill='%23fff' text-anchor='middle' dominant-baseline='central'%3EH%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="assets/img/hopex-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/hopex-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preload" as="image" href="assets/img/hopex-mark.webp" type="image/webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/style.css">
@@ -37,6 +41,7 @@
   "genre": ["Electronic", "Trap", "Future Bass"],
   "foundingLocation": { "@type": "Place", "name": "Amsterdam, Netherlands" },
   "url": "https://hopex.ai/",
+  "logo": "assets/img/hopex-icon.png",
   "sameAs": [
     "https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO",
     "https://www.youtube.com/@HOPEX",
@@ -68,55 +73,60 @@
 
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
 <header class="nav" id="top">
-  <a class="nav__mark" href="#top" aria-label="HOPEX — top of page">HOPEX</a>
+  <a class="nav__mark" href="#top" aria-label="HOPEX — top of page">
+    <img src="assets/img/hopex-mark.webp" alt="" width="256" height="256" decoding="async">
+    <span>HOPEX</span>
+  </a>
   <nav class="nav__links" aria-label="Primary">
     <a href="#sounds">Sounds</a>
     <a href="#video">Video</a>
     <a href="#connect">Connect</a>
   </nav>
-  <button class="nav__invert" type="button" id="invert" aria-pressed="false">
-    <span class="nav__invert-box" aria-hidden="true"></span>
-    <span>Invert</span>
-  </button>
+  <span class="nav__progress" id="progress" aria-hidden="true"></span>
 </header>
 
 <main>
 
   <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
   <section class="hero" aria-labelledby="hero-title">
+
+    <div class="hero__bg" aria-hidden="true">
+      <span class="orb orb--a"></span>
+      <span class="orb orb--b"></span>
+      <span class="beam"></span>
+    </div>
+
     <div class="hero__inner">
 
       <p class="hero__eyebrow"><span>(00)</span> Amsterdam &mdash; NL</p>
 
-      <h1 class="hero__title" id="hero-title" data-parallax>
+      <!-- Monogram -->
+      <div class="mark" id="mark">
+        <span class="mark__halo" aria-hidden="true"></span>
+        <span class="mark__ring" aria-hidden="true"></span>
+        <span class="mark__sweep-ring" aria-hidden="true"></span>
+        <span class="mark__inner">
+          <picture>
+            <source srcset="assets/img/hopex-mark.webp" type="image/webp">
+            <img class="mark__img" src="assets/img/hopex-mark.png" alt=""
+                 width="1000" height="1000" fetchpriority="high" decoding="async">
+          </picture>
+          <span class="mark__sweep" aria-hidden="true"></span>
+        </span>
+      </div>
+
+      <h1 class="hero__title" id="hero-title">
         <span class="ltr" style="--i:0">H</span><span class="ltr" style="--i:1">O</span><span class="ltr" style="--i:2">P</span><span class="ltr" style="--i:3">E</span><span class="ltr" style="--i:4">X</span>
       </h1>
 
-      <div class="hero__meta">
-        <div class="hero__cell">
-          <span class="lbl">Discipline</span>
-          <span class="val">Producer / DJ</span>
-        </div>
-        <div class="hero__cell">
-          <span class="lbl">Sound</span>
-          <span class="val">Electronic &middot; Trap &middot; Future&nbsp;Bass</span>
-        </div>
-        <div class="hero__cell">
-          <span class="lbl">Base</span>
-          <span class="val">Amsterdam, Netherlands</span>
-        </div>
-        <div class="hero__cell">
-          <span class="lbl">Since</span>
-          <span class="val">2018</span>
-        </div>
-      </div>
+      <p class="hero__sub">Producer &amp; DJ &mdash; Electronic / Trap / Future Bass</p>
 
       <div class="hero__cta">
         <a class="btn btn--solid" href="#sounds">
           <span>Listen</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M12 20l-7-7M12 20l7-7"/></svg>
         </a>
-        <a class="btn" data-social="spotify" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
+        <a class="btn" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
           <span>Spotify</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
         </a>
@@ -130,14 +140,34 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════ FACTS STRIP ══════════════════════════════ -->
+  <section class="facts" aria-label="At a glance">
+    <div class="facts__cell" data-reveal>
+      <span class="lbl">Discipline</span>
+      <span class="val">Producer / DJ</span>
+    </div>
+    <div class="facts__cell" data-reveal>
+      <span class="lbl">Sound</span>
+      <span class="val">Electronic &middot; Trap &middot; Future&nbsp;Bass</span>
+    </div>
+    <div class="facts__cell" data-reveal>
+      <span class="lbl">Base</span>
+      <span class="val">Amsterdam, Netherlands</span>
+    </div>
+    <div class="facts__cell" data-reveal>
+      <span class="lbl">Since</span>
+      <span class="val">2018</span>
+    </div>
+  </section>
+
   <!-- ══════════════════════════════ SPOTIFY ══════════════════════════════ -->
   <section class="sec" id="sounds" aria-labelledby="sounds-title">
-    <div class="sec__head" data-reveal>
-      <p class="sec__num">(01)</p>
-      <h2 class="sec__title" id="sounds-title">Latest<br>Sounds</h2>
-      <div class="sec__aside">
+    <div class="sec__head">
+      <p class="sec__num" data-reveal>(01)</p>
+      <h2 class="sec__title" id="sounds-title" data-reveal>Latest<br>Sounds</h2>
+      <div class="sec__aside" data-reveal>
         <p>Streaming now on Spotify. The player below pulls straight from the artist profile &mdash; it is always current, no refresh needed.</p>
-        <a class="btn" data-social="spotify" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
+        <a class="btn" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
           <span>Open profile</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
         </a>
@@ -168,34 +198,34 @@
 
   <!-- ══════════════════════════════ YOUTUBE ══════════════════════════════ -->
   <section class="sec" id="video" aria-labelledby="video-title">
-    <div class="sec__head" data-reveal>
-      <p class="sec__num">(02)</p>
-      <h2 class="sec__title" id="video-title">Latest<br>Video</h2>
-      <div class="sec__aside">
+    <div class="sec__head">
+      <p class="sec__num" data-reveal>(02)</p>
+      <h2 class="sec__title" id="video-title" data-reveal>Latest<br>Video</h2>
+      <div class="sec__aside" data-reveal>
         <p>Most recent uploads from the HOPEX channel. Tap any tile to play it right here.</p>
-        <a class="btn" data-social="youtube" href="https://www.youtube.com/@HOPEX" target="_blank" rel="noopener">
+        <a class="btn" href="https://www.youtube.com/@HOPEX" target="_blank" rel="noopener">
           <span>Subscribe</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
         </a>
       </div>
     </div>
 
-    <div class="videos" id="videos" data-reveal aria-live="polite" aria-busy="true">
+    <div class="videos" id="videos" aria-live="polite" aria-busy="true">
       <p class="videos__status" id="videos-status">Loading latest uploads&hellip;</p>
     </div>
   </section>
 
   <!-- ══════════════════════════════ SOCIALS ══════════════════════════════ -->
   <section class="sec sec--flush" id="connect" aria-labelledby="connect-title">
-    <div class="sec__head" data-reveal>
-      <p class="sec__num">(03)</p>
-      <h2 class="sec__title" id="connect-title">Connect</h2>
-      <div class="sec__aside">
+    <div class="sec__head">
+      <p class="sec__num" data-reveal>(03)</p>
+      <h2 class="sec__title" id="connect-title" data-reveal>Connect</h2>
+      <div class="sec__aside" data-reveal>
         <p>Everywhere at once. Follow, stream, or say something.</p>
       </div>
     </div>
 
-    <ul class="social" id="social" data-reveal></ul>
+    <ul class="social" id="social"></ul>
   </section>
 
   <!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
@@ -212,7 +242,10 @@
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
 <footer class="foot">
   <div class="foot__row">
-    <span class="foot__mark">HOPEX</span>
+    <span class="foot__mark">
+      <img src="assets/img/hopex-mark.webp" alt="" width="256" height="256" loading="lazy" decoding="async">
+      HOPEX
+    </span>
     <span>Amsterdam &mdash; NL</span>
   </div>
   <div class="foot__row foot__row--end">

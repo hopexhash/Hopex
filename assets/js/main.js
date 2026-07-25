@@ -6,33 +6,13 @@
 
   var CFG = window.HOPEX || {};
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine    = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  var $  = function (s, r) { return (r || document).querySelector(s); };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
 
   /* ── Year ───────────────────────────────────────────────────────────── */
   var year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());
-
-  /* ── Invert (theme) ─────────────────────────────────────────────────── */
-  (function theme() {
-    var btn = $('#invert');
-    if (!btn) return;
-
-    var stored = null;
-    try { stored = localStorage.getItem('hopex-theme'); } catch (e) {}
-    if (stored === 'light' || stored === 'dark') apply(stored);
-
-    function apply(mode) {
-      document.documentElement.setAttribute('data-theme', mode);
-      btn.setAttribute('aria-pressed', mode === 'light' ? 'true' : 'false');
-    }
-
-    btn.addEventListener('click', function () {
-      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      apply(next);
-      try { localStorage.setItem('hopex-theme', next); } catch (e) {}
-    });
-  })();
 
   /* ── Contact ────────────────────────────────────────────────────────── */
   (function contact() {
@@ -47,9 +27,12 @@
     var list = $('#social');
     if (!list || !Array.isArray(CFG.socials)) return;
 
-    CFG.socials.forEach(function (s) {
+    CFG.socials.forEach(function (s, i) {
       var li = document.createElement('li');
-      var a  = document.createElement('a');
+      li.setAttribute('data-reveal', '');
+      li.style.setProperty('--d', (i * 0.06) + 's');
+
+      var a = document.createElement('a');
       a.href = s.url;
       a.target = '_blank';
       a.rel = 'noopener';
@@ -157,14 +140,15 @@
       }
       if (status) status.remove();
 
-      items.forEach(function (v, i) {
-        grid.appendChild(card(v, i));
-      });
+      items.forEach(function (v, i) { grid.appendChild(card(v, i)); });
+      observe(grid.querySelectorAll('[data-reveal]'));
     }
 
     function card(v, i) {
       var art = document.createElement('article');
       art.className = 'vid';
+      art.setAttribute('data-reveal', '');
+      art.style.setProperty('--d', (i % 3 * 0.09) + 's');
 
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -251,48 +235,88 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
 
   /* ── Scroll reveal ──────────────────────────────────────────────────── */
-  (function reveal() {
-    var nodes = document.querySelectorAll('[data-reveal]');
-    if (!nodes.length) return;
+  var io = null;
+
+  function observe(nodes) {
+    if (!nodes || !nodes.length) return;
 
     if (reduced || !('IntersectionObserver' in window)) {
-      nodes.forEach(function (n) { n.classList.add('in'); });
+      Array.prototype.forEach.call(nodes, function (n) { n.classList.add('in'); });
       return;
     }
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: .12 });
+    if (!io) {
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: .12 });
+    }
 
-    nodes.forEach(function (n) { io.observe(n); });
+    Array.prototype.forEach.call(nodes, function (n) { io.observe(n); });
+  }
+
+  observe(document.querySelectorAll('[data-reveal]'));
+
+  /* ── Scroll progress + hero parallax ────────────────────────────────── */
+  (function scroll() {
+    var bar  = $('#progress');
+    var mark = $('#mark');
+    var hero = document.querySelector('.hero');
+    var queued = false;
+
+    function frame() {
+      queued = false;
+      var y = window.scrollY || 0;
+
+      if (bar) {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+      }
+
+      // The monogram drifts up and dissolves as the hero leaves the viewport.
+      if (mark && hero && !reduced) {
+        var span = hero.offsetHeight || 1;
+        var t = Math.min(1, y / span);
+        mark.style.opacity = String(Math.max(0, 1 - t * 1.15));
+        mark.style.translate = '0 ' + (-t * 70) + 'px';
+        mark.style.scale = String(1 - t * 0.12);
+      }
+    }
+
+    window.addEventListener('scroll', function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(frame);
+    }, { passive: true });
+
+    frame();
   })();
 
-  /* ── Hero pointer parallax ──────────────────────────────────────────── */
-  (function parallax() {
-    var title = $('[data-parallax]');
-    if (!title || reduced || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  /* ── Monogram pointer tilt ──────────────────────────────────────────── */
+  (function tilt() {
+    var mark = $('#mark');
+    if (!mark || reduced || !fine) return;
 
-    var letters = Array.prototype.slice.call(title.children);
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
 
     window.addEventListener('pointermove', function (e) {
-      tx = (e.clientX / window.innerWidth - .5) * 2;
+      tx = (e.clientX / window.innerWidth  - .5) * 2;
       ty = (e.clientY / window.innerHeight - .5) * 2;
       if (!raf) raf = requestAnimationFrame(tick);
     }, { passive: true });
 
     function tick() {
-      cx += (tx - cx) * .07;
-      cy += (ty - cy) * .07;
+      cx += (tx - cx) * .06;
+      cy += (ty - cy) * .06;
 
-      letters.forEach(function (l, i) {
-        var depth = (i - (letters.length - 1) / 2) * 2.2;
-        l.style.translate = (cx * depth) + 'px ' + (cy * depth * .6) + 'px';
-      });
+      // Tilt owns `transform`; the scroll handler above owns the standalone
+      // `translate` / `scale` properties, so the two never clobber each other.
+      // perspective() must lead the list for the rotations to read as 3D.
+      mark.style.transform =
+        'perspective(900px) rotateY(' + (cx * 9) + 'deg) rotateX(' + (-cy * 7) + 'deg)';
 
       raf = (Math.abs(tx - cx) > .001 || Math.abs(ty - cy) > .001)
         ? requestAnimationFrame(tick)
