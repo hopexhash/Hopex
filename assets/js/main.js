@@ -10,6 +10,35 @@
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
 
+  /* ── Always open at the top ─────────────────────────────────────────────
+     Two things dragged a reload down the page: the browser restoring the
+     previous scroll offset, and in-page links leaving a #hash in the URL that
+     the next load jumped to. Kill both — this is a one-page site. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  if (location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+  window.addEventListener('load', function () { window.scrollTo(0, 0); });
+
+  // In-page nav scrolls without writing a hash, so a later reload still opens
+  // at the top. Focus still moves, so keyboard and screen-reader users land in
+  // the right place.
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    var id = link.getAttribute('href').slice(1);
+    var target = id ? document.getElementById(id) : document.body;
+    if (!target) return;
+
+    e.preventDefault();
+    target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  });
+
   /* ── Year ───────────────────────────────────────────────────────────── */
   var year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());
@@ -294,9 +323,7 @@
 
   /* ── Scroll progress + hero parallax ────────────────────────────────── */
   (function scroll() {
-    var bar  = $('#progress');
-    var mark = $('#mark');
-    var hero = document.querySelector('.hero');
+    var bar = $('#progress');
     var queued = false;
 
     function frame() {
@@ -308,14 +335,6 @@
         bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
       }
 
-      // The monogram drifts up and dissolves as the hero leaves the viewport.
-      if (mark && hero && !reduced) {
-        var span = hero.offsetHeight || 1;
-        var t = Math.min(1, y / span);
-        mark.style.opacity = String(Math.max(0, 1 - t * 1.15));
-        mark.style.translate = '0 ' + (-t * 70) + 'px';
-        mark.style.scale = String(1 - t * 0.12);
-      }
     }
 
     window.addEventListener('scroll', function () {
@@ -327,42 +346,17 @@
     frame();
   })();
 
-  /* ── Monogram pointer tilt + hero spotlight ─────────────────────────── */
-  (function tilt() {
-    var mark = $('#mark');
+  /* ── Hero spotlight ─────────────────────────────────────────────────── */
+  (function spotlight() {
     var spot = $('#spot');
     var hero = document.querySelector('.hero');
-    if (!mark || reduced || !fine) return;
-
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    if (!spot || !hero || reduced || !fine) return;
 
     window.addEventListener('pointermove', function (e) {
-      tx = (e.clientX / window.innerWidth  - .5) * 2;
-      ty = (e.clientY / window.innerHeight - .5) * 2;
-
-      if (spot && hero) {
-        var r = hero.getBoundingClientRect();
-        spot.style.transform =
-          'translate3d(' + (e.clientX - r.left) + 'px,' + (e.clientY - r.top) + 'px,0)';
-      }
-
-      if (!raf) raf = requestAnimationFrame(tick);
+      var r = hero.getBoundingClientRect();
+      spot.style.transform =
+        'translate3d(' + (e.clientX - r.left) + 'px,' + (e.clientY - r.top) + 'px,0)';
     }, { passive: true });
-
-    function tick() {
-      cx += (tx - cx) * .06;
-      cy += (ty - cy) * .06;
-
-      // Tilt owns `transform`; the scroll handler above owns the standalone
-      // `translate` / `scale` properties, so the two never clobber each other.
-      // perspective() must lead the list for the rotations to read as 3D.
-      mark.style.transform =
-        'perspective(900px) rotateY(' + (cx * 9) + 'deg) rotateX(' + (-cy * 7) + 'deg)';
-
-      raf = (Math.abs(tx - cx) > .001 || Math.abs(ty - cy) > .001)
-        ? requestAnimationFrame(tick)
-        : null;
-    }
   })();
 
 })();

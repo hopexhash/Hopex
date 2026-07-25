@@ -367,14 +367,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   width: 100%;
 }
 
+/* Pinned to the top of the hero rather than riding the centred stack. */
 .hero__eyebrow {
+  position: absolute;
+  top: clamp(1.1rem, 3vh, 2.25rem);
+  left: var(--pad);
+  right: var(--pad);
   display: flex;
   align-items: center;
   gap: .8rem;
-  width: 100%;
+  margin: 0;
   font-size: .7rem;
   color: var(--mut);
-  margin-bottom: clamp(1rem, 3vh, 2rem);
   opacity: 0;
   animation: fadeUp .9s var(--ease) .1s forwards;
 }
@@ -387,112 +391,20 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 
 /* ── The monogram ───────────────────────────────────────────────────────── */
+/* Small and still: a mark above the logotype, not a light show. */
 .mark {
   position: relative;
-  /* sized against both axes so the lockup still clears the fold on short laptops */
-  width: clamp(200px, min(36vw, 37vh), 480px);
+  width: clamp(52px, 7vw, 88px);
   aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  margin-bottom: clamp(.5rem, 2vh, 1.5rem);
-  will-change: transform;
-}
-
-/* pulsing halo behind the mark */
-.mark__halo {
-  position: absolute;
-  inset: -18%;
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--fg) 30%, transparent), color-mix(in srgb, var(--fg) 6%, transparent) 42%, transparent 68%);
-  filter: blur(34px);
-  animation: halo 5.5s ease-in-out infinite;
-}
-@keyframes halo {
-  0%, 100% { transform: scale(.94); opacity: .55; }
-  50%      { transform: scale(1.08); opacity: 1; }
-}
-
-/* orbit: a faint full circle with a bright segment travelling around it */
-.mark__ring {
-  position: absolute;
-  inset: -7%;
-  border-radius: 50%;
-  border: 1px solid var(--ln-2);
-}
-.mark__sweep-ring {
-  position: absolute;
-  inset: -7%;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 62%, color-mix(in srgb, var(--fg) 55%, transparent) 82%, color-mix(in srgb, var(--fg) 90%, transparent) 88%, transparent 92%);
-  -webkit-mask: radial-gradient(circle, transparent 0 calc(50% - 1.5px), #000 calc(50% - 1.5px) 50%, transparent 50%);
-          mask: radial-gradient(circle, transparent 0 calc(50% - 1.5px), #000 calc(50% - 1.5px) 50%, transparent 50%);
-  animation: spin 11s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* float wrapper — keeps idle motion off the entrance transform,
-   and clips the light band to the glyph box */
-.mark__inner {
-  position: relative;
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  animation: float 7s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(-8px); }
-  50%      { transform: translateY(8px); }
+  margin-bottom: clamp(.9rem, 2.2vh, 1.5rem);
+  opacity: 0;
+  animation: fadeUp .9s var(--ease) .25s forwards;
 }
 
 .mark__img {
   width: 100%;
   height: auto;
-  opacity: 0;
-  animation: markIn 2.1s var(--ease) .15s forwards, breathe 5.5s ease-in-out 2.3s infinite;
-}
-/* The invert has to sit on the wrapper: .mark__img's own `filter` is driven by
-   the markIn / breathe keyframes, and an animated property always beats a
-   static declaration. <picture> carries no animation, so it is the safe hook. */
-[data-theme="light"] .mark__inner picture { filter: invert(1); }
-
-[data-theme="light"] .wordmark,
-[data-theme="light"] .brandtype {
-  text-shadow:
-    0 -.012em 0     rgba(255, 255, 255, .55),
-    0  .016em .01em rgba(0, 0, 0, .3),
-    0  .04em  .04em rgba(0, 0, 0, .18);
-}
-
-/* power-on flicker */
-@keyframes markIn {
-  0%   { opacity: 0;   transform: scale(1.16); filter: blur(22px) brightness(2.4); }
-  35%  { opacity: .45; transform: scale(1.06); filter: blur(6px)  brightness(1.8); }
-  42%  { opacity: .06; }
-  50%  { opacity: .85; }
-  57%  { opacity: .18; }
-  66%  { opacity: 1;   filter: blur(0) brightness(1.5); }
-  74%  { opacity: .55; }
-  100% { opacity: 1;   transform: scale(1); filter: blur(0) brightness(1); }
-}
-@keyframes breathe {
-  0%, 100% { filter: brightness(1); }
-  50%      { filter: brightness(1.22); }
-}
-
-/* light band sweeping down the mark */
-.mark__sweep {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 42%, color-mix(in srgb, var(--fg) 22%, transparent) 50%, transparent 58%);
-  mix-blend-mode: overlay;
-  animation: sweep 6s ease-in-out 2.6s infinite;
-}
-@keyframes sweep {
-  0%      { transform: translateY(-115%); opacity: 0; }
-  10%     { opacity: 1; }
-  55%     { opacity: 1; }
-  70%, 100% { transform: translateY(115%); opacity: 0; }
+  filter: var(--glyph-filter) drop-shadow(0 0 14px color-mix(in srgb, var(--fg) 40%, transparent));
 }
 
 /* ── Wordmark ───────────────────────────────────────────────────────────────
@@ -512,6 +424,15 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     0  0      .45em rgba(255, 255, 255, .22);
 }
 
+/* On paper the bevel has to flip, or the logotype reads debossed backwards. */
+[data-theme="light"] .wordmark,
+[data-theme="light"] .brandtype {
+  text-shadow:
+    0 -.012em 0     rgba(255, 255, 255, .55),
+    0  .016em .01em rgba(0, 0, 0, .3),
+    0  .04em  .04em rgba(0, 0, 0, .18);
+}
+
 .hero__title {
   display: flex;
   justify-content: center;
@@ -522,7 +443,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .wordmark {
   position: relative;
   display: inline-flex;
-  font-size: clamp(1.45rem, 9vw, 7rem);
+  font-size: clamp(1.7rem, 10.5vw, 8rem);
   padding: .1em .05em .06em;
   overflow: hidden;                 /* clips the letter rise */
   transform: scaleX(1.55);
@@ -608,7 +529,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* short landscape viewports — tighten the lockup so the CTAs stay above the fold */
 @media (min-width: 861px) and (max-height: 780px) {
   .hero { padding-top: 1.75rem; padding-bottom: 3rem; }
-  .hero__title { font-size: clamp(2rem, 6vw, 4.25rem); }
   .hero__cta { margin-top: 1.25rem; }
 }
 
@@ -969,10 +889,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
-  .hero__title .ltr { transform: none; }
-  .mark__img { opacity: 1; }
-  .hero__eyebrow, .hero__sub, .hero__cta { opacity: 1; }
-  .mark__sweep, .mark__sweep-ring, .beam { display: none; }
+  .wordmark .ltr { transform: none; }
+  .mark, .hero__eyebrow, .hero__sub, .hero__cta { opacity: 1; }
+  .beam { display: none; }
   [data-reveal] { opacity: 1; transform: none; }
   .grain { display: none; }
 }
