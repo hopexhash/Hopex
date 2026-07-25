@@ -96,9 +96,39 @@ GitHub Pages on every push to the working branch, so a push is a deploy:
 
     https://hopexhash.github.io/Hopex/
 
-To move it to `hopex.ai`, add a `CNAME` file containing `hopex.ai` at the repo
-root, point the domain's DNS at GitHub Pages, and set the custom domain under
-Settings → Pages. Then update the `og:url` and `canonical` tags in `index.html`.
+### Custom domain — hopexmusic.com
+
+The page's `canonical`, `og:url` and social-image tags already point at
+`https://hopexmusic.com/`. Two steps remain, both outside the repo.
+
+> **Do not add a `CNAME` file.** This site publishes from a custom Actions
+> workflow, and GitHub ignores `CNAME` in that mode — the domain lives in the
+> repository's Pages settings instead.
+
+**1. DNS, at whoever the domain is registered with.** Add all four A records
+(and the AAAA records if IPv6 is offered):
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| AAAA | `@` | `2606:50c0:8000::153` |
+| AAAA | `@` | `2606:50c0:8001::153` |
+| AAAA | `@` | `2606:50c0:8002::153` |
+| AAAA | `@` | `2606:50c0:8003::153` |
+| CNAME | `www` | `hopexhash.github.io` |
+
+Delete any existing A or parking record on `@` first, or the old one wins.
+
+**2. GitHub.** Settings → Pages → Custom domain → `hopexmusic.com` → Save.
+Wait for the DNS check to pass, then tick **Enforce HTTPS**. The certificate can
+take up to an hour; until it is issued the site may warn as insecure, which is
+expected and clears on its own.
+
+With the apex set as the custom domain, GitHub redirects `www` to it
+automatically.
 
 Any other static host works too — Netlify, Vercel and Cloudflare Pages all take
 the folder as-is with no build command and publish directory `.`
