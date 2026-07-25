@@ -20,6 +20,23 @@
   --f-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --ease: cubic-bezier(.16, 1, .3, 1);
+
+  --glyph-filter: none;
+}
+
+/* Light is a real second ground, not an inversion: paper white, ink black, and
+   the logotype drops from ivory to a warm near-black so it still reads warm. */
+[data-theme="light"] {
+  --bg:    #fbfaf7;
+  --bg-2:  #f2f0ea;
+  --fg:    #0a0a0a;
+  --ivory: #1a1712;
+  --mut:   #6a6862;
+  --ln:    rgba(0, 0, 0, .26);
+  --ln-2:  rgba(0, 0, 0, .09);
+
+  /* the mark ships as white-with-alpha, so light mode needs it flipped to ink */
+  --glyph-filter: invert(1);
 }
 
 /* ── Reset ──────────────────────────────────────────────────────────────── */
@@ -36,6 +53,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
+  transition: background .45s var(--ease), color .45s var(--ease);
   font-family: var(--f-disp);
   font-size: 16px;
   line-height: 1.45;
@@ -53,7 +71,7 @@ ul { list-style: none; padding: 0; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
-::selection { background: #fff; color: #000; }
+::selection { background: var(--fg); color: var(--bg); }
 
 :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
 
@@ -86,6 +104,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   animation: grain 6s steps(6) infinite;
 }
+[data-theme="light"] .grain { opacity: .16; mix-blend-mode: multiply; }
+
 @keyframes grain {
   0%   { transform: translate3d(0, 0, 0); }
   16%  { transform: translate3d(-3%, -4%, 0); }
@@ -131,7 +151,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   justify-content: space-between;
   gap: 1rem;
   padding: .7rem var(--pad);
-  background: rgba(0, 0, 0, .72);
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border-bottom: var(--rule) solid var(--ln);
@@ -147,11 +167,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   letter-spacing: -.02em;
 }
 .nav__mark img {
-  width: 30px; height: 30px;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, .5));
+  width: 34px; height: 34px;
+  filter: var(--glyph-filter) drop-shadow(0 0 8px color-mix(in srgb, var(--fg) 45%, transparent));
   transition: transform .6s var(--ease), filter .6s var(--ease);
 }
-.nav__mark:hover img { transform: rotate(-8deg) scale(1.12); filter: brightness(1.35); }
+.nav__mark:hover img { transform: rotate(-8deg) scale(1.12); }
 
 .nav__links {
   display: flex;
@@ -175,6 +195,30 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .nav__links a:hover::after,
 .nav__links a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 
+.nav__theme {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .38rem .6rem;
+  border: var(--rule) solid var(--ln);
+  font-family: var(--f-mono); font-size: .66rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+.nav__theme:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.nav__theme-box {
+  width: 10px; height: 10px;
+  border: 1px solid currentColor;
+  background: linear-gradient(135deg, currentColor 0 50%, transparent 50% 100%);
+}
+@media (max-width: 700px) { .nav__theme span:last-child { display: none; } }
+
+/* Below ~420px the glyph, wordmark, three links and the toggle stop fitting on
+   one row — drop the nav wordmark and keep the mark as the brand. */
+@media (max-width: 420px) {
+  .nav { gap: .5rem; }
+  .nav__mark .brandtype { display: none; }
+  .nav__links { gap: .8rem; font-size: .64rem; }
+}
+
 /* scroll progress */
 .nav__progress {
   position: absolute;
@@ -184,7 +228,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--fg);
   transform: scaleX(0);
   transform-origin: left;
-  box-shadow: 0 0 14px rgba(255, 255, 255, .8);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--fg) 70%, transparent);
 }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
@@ -219,7 +263,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   stroke-linecap: square;
   transition: transform .35s var(--ease);
 }
-.btn:hover, .btn:focus-visible { color: var(--bg); box-shadow: 0 0 26px rgba(255, 255, 255, .18); }
+.btn:hover, .btn:focus-visible { color: var(--bg); box-shadow: 0 0 26px color-mix(in srgb, var(--fg) 18%, transparent); }
 .btn:hover::before, .btn:focus-visible::before { transform: translateY(0); }
 .btn:hover svg { transform: translate(3px, -3px); }
 
@@ -268,12 +312,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .orb--a {
   top: -22%; left: -14%;
-  background: radial-gradient(circle, rgba(255,255,255,.09), transparent 62%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--fg) 9%, transparent), transparent 62%);
   animation: drift-a 22s ease-in-out infinite alternate;
 }
 .orb--b {
   bottom: -28%; right: -16%;
-  background: radial-gradient(circle, rgba(255,255,255,.07), transparent 62%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--fg) 7%, transparent), transparent 62%);
   animation: drift-b 27s ease-in-out infinite alternate;
 }
 @keyframes drift-a {
@@ -292,7 +336,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   width: 42vmax; height: 42vmax;
   margin: -21vmax 0 0 -21vmax;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,.075), transparent 62%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--fg) 8%, transparent), transparent 62%);
   filter: blur(30px);
   opacity: 0;
   transition: opacity .6s var(--ease);
@@ -306,7 +350,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   top: -20%; left: 50%;
   width: 46vmax; height: 140%;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.05) 45%, rgba(255,255,255,.07) 50%, rgba(255,255,255,.05) 55%, transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--fg) 5%, transparent) 45%, color-mix(in srgb, var(--fg) 7%, transparent) 50%, color-mix(in srgb, var(--fg) 5%, transparent) 55%, transparent);
   filter: blur(28px);
   animation: beam 14s ease-in-out infinite alternate;
 }
@@ -346,7 +390,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mark {
   position: relative;
   /* sized against both axes so the lockup still clears the fold on short laptops */
-  width: clamp(220px, min(34vw, 40vh), 460px);
+  width: clamp(200px, min(36vw, 37vh), 480px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -359,7 +403,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: absolute;
   inset: -18%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,.30), rgba(255,255,255,.06) 42%, transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--fg) 30%, transparent), color-mix(in srgb, var(--fg) 6%, transparent) 42%, transparent 68%);
   filter: blur(34px);
   animation: halo 5.5s ease-in-out infinite;
 }
@@ -373,13 +417,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: absolute;
   inset: -7%;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, .13);
+  border: 1px solid var(--ln-2);
 }
 .mark__sweep-ring {
   position: absolute;
   inset: -7%;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 62%, rgba(255,255,255,.55) 82%, rgba(255,255,255,.9) 88%, transparent 92%);
+  background: conic-gradient(from 0deg, transparent 0 62%, color-mix(in srgb, var(--fg) 55%, transparent) 82%, color-mix(in srgb, var(--fg) 90%, transparent) 88%, transparent 92%);
   -webkit-mask: radial-gradient(circle, transparent 0 calc(50% - 1.5px), #000 calc(50% - 1.5px) 50%, transparent 50%);
           mask: radial-gradient(circle, transparent 0 calc(50% - 1.5px), #000 calc(50% - 1.5px) 50%, transparent 50%);
   animation: spin 11s linear infinite;
@@ -406,6 +450,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   opacity: 0;
   animation: markIn 2.1s var(--ease) .15s forwards, breathe 5.5s ease-in-out 2.3s infinite;
 }
+/* The invert has to sit on the wrapper: .mark__img's own `filter` is driven by
+   the markIn / breathe keyframes, and an animated property always beats a
+   static declaration. <picture> carries no animation, so it is the safe hook. */
+[data-theme="light"] .mark__inner picture { filter: invert(1); }
+
+[data-theme="light"] .wordmark,
+[data-theme="light"] .brandtype {
+  text-shadow:
+    0 -.012em 0     rgba(255, 255, 255, .55),
+    0  .016em .01em rgba(0, 0, 0, .3),
+    0  .04em  .04em rgba(0, 0, 0, .18);
+}
 
 /* power-on flicker */
 @keyframes markIn {
@@ -428,7 +484,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, transparent 42%, rgba(255,255,255,.22) 50%, transparent 58%);
+  background: linear-gradient(180deg, transparent 42%, color-mix(in srgb, var(--fg) 22%, transparent) 50%, transparent 58%);
   mix-blend-mode: overlay;
   animation: sweep 6s ease-in-out 2.6s infinite;
 }
@@ -571,7 +627,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: background .45s var(--ease);
 }
 .facts__cell:last-child { border-right: 0; }
-.facts__cell:hover { background: rgba(255, 255, 255, .04); }
+.facts__cell:hover { background: color-mix(in srgb, var(--fg) 4%, transparent); }
 .facts__cell .lbl { font-size: .62rem; color: var(--mut); }
 .facts__cell .val { font-size: clamp(.95rem, 1.6vw, 1.15rem); font-weight: 600; letter-spacing: -.01em; }
 
@@ -615,7 +671,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--bg-2);
   transition: border-color .5s var(--ease), box-shadow .5s var(--ease);
 }
-.frame:hover { border-color: rgba(255,255,255,.4); box-shadow: 0 0 60px rgba(255,255,255,.06); }
+.frame:hover { border-color: color-mix(in srgb, var(--fg) 40%, transparent); box-shadow: 0 0 60px color-mix(in srgb, var(--fg) 8%, transparent); }
 .frame__bar {
   display: flex;
   align-items: center;
@@ -628,7 +684,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .frame__dot {
   width: 7px; height: 7px;
   background: var(--fg);
-  box-shadow: 0 0 10px rgba(255,255,255,.9);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--fg) 80%, transparent);
   animation: blink 1.6s steps(1) infinite;
 }
 @keyframes blink { 50% { opacity: .15; } }
@@ -681,8 +737,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
 }
 .vid__btn:hover, .vid__btn:focus-visible {
-  border-color: rgba(255,255,255,.5);
-  box-shadow: 0 0 40px rgba(255,255,255,.09);
+  border-color: color-mix(in srgb, var(--fg) 50%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--fg) 10%, transparent);
 }
 .vid__btn img {
   width: 100%; height: 100%;
@@ -826,7 +882,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background-position: 0 100%;
   transition: background-size .45s var(--ease), text-shadow .45s var(--ease);
 }
-.contact__mail:hover { background-size: 0% 1px; text-shadow: 0 0 26px rgba(255,255,255,.55); }
+.contact__mail:hover { background-size: 0% 1px; text-shadow: 0 0 26px color-mix(in srgb, var(--fg) 45%, transparent); }
 
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 .foot {
@@ -853,7 +909,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font-stretch: 112%;
   letter-spacing: -.03em;
 }
-.foot__mark img { width: 34px; height: 34px; filter: drop-shadow(0 0 10px rgba(255,255,255,.45)); }
+.foot__mark img { width: 38px; height: 38px; filter: var(--glyph-filter) drop-shadow(0 0 10px color-mix(in srgb, var(--fg) 40%, transparent)); }
 .foot a:hover { color: var(--fg); }
 
 /* ── Lightbox ───────────────────────────────────────────────────────────── */
@@ -865,7 +921,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 5vw, 4rem);
-  background: rgba(0, 0, 0, .93);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   animation: fade .35s var(--ease);
@@ -879,7 +935,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   aspect-ratio: 16 / 9;
   border: var(--rule) solid var(--ln);
   background: #000;
-  box-shadow: 0 0 90px rgba(255, 255, 255, .1);
+  box-shadow: 0 0 90px color-mix(in srgb, var(--fg) 12%, transparent);
 }
 .lb__slot iframe { width: 100%; height: 100%; border: 0; }
 

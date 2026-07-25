@@ -14,6 +14,38 @@
   var year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());
 
+  /* ── Theme ──────────────────────────────────────────────────────────────
+     Dark is the design; light is the alternative. A stored choice wins, then
+     the OS preference, then dark. */
+  (function theme() {
+    var btn = $('#theme');
+    if (!btn) return;
+
+    var stored = null;
+    try { stored = localStorage.getItem('hopex-theme'); } catch (e) {}
+
+    if (stored === 'light' || stored === 'dark') {
+      apply(stored);
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      apply('light');
+    }
+
+    function apply(mode) {
+      document.documentElement.setAttribute('data-theme', mode);
+      btn.setAttribute('aria-pressed', mode === 'light' ? 'true' : 'false');
+      btn.lastElementChild.textContent = mode === 'light' ? 'Dark' : 'Light';
+
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', mode === 'light' ? '#fbfaf7' : '#000000');
+    }
+
+    btn.addEventListener('click', function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      apply(next);
+      try { localStorage.setItem('hopex-theme', next); } catch (e) {}
+    });
+  })();
+
   /* ── Contact ────────────────────────────────────────────────────────── */
   (function contact() {
     var el = $('#contact-mail');

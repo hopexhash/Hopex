@@ -91,21 +91,27 @@ YouTube fetch needs `http://`.
 
 ## Deploying
 
-It is a plain static site, so anything works:
+**It is already live.** `.github/workflows/pages.yml` publishes the repo root to
+GitHub Pages on every push to the working branch, so a push is a deploy:
 
-- **Netlify / Vercel / Cloudflare Pages** — drag the folder in, or connect the
-  repo. No build command, publish directory `.`
-- **GitHub Pages** — Settings → Pages → deploy from branch, root folder.
+    https://hopexhash.github.io/Hopex/
 
-Point the `hopex.ai` DNS at whichever host you pick, then update the
-`og:url` / `canonical` tags in `index.html` if the domain differs.
+To move it to `hopex.ai`, add a `CNAME` file containing `hopex.ai` at the repo
+root, point the domain's DNS at GitHub Pages, and set the custom domain under
+Settings → Pages. Then update the `og:url` and `canonical` tags in `index.html`.
+
+Any other static host works too — Netlify, Vercel and Cloudflare Pages all take
+the folder as-is with no build command and publish directory `.`
 
 ---
 
 ## Notes
 
-- Dark only, by design. Every colour is a CSS custom property at the top of
-  `style.css` if that ever needs to change.
+- Dark by default, with a **Light / Dark toggle in the nav**. The choice is
+  remembered in `localStorage`; with no stored choice the site follows the
+  visitor's OS setting, falling back to dark. Light is a real second palette
+  (paper `#fbfaf7`, ink `#0a0a0a`) rather than a naive inversion — every colour
+  is a custom property at the top of `style.css`.
 - Responsive from 320px up. The hero lockup is sized against both viewport
   axes, so the call-to-action stays above the fold on short laptop screens —
   verified at 320, 390, 1024, 1366, 1440 and 1920px wide.
