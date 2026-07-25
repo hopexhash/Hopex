@@ -295,9 +295,11 @@
     frame();
   })();
 
-  /* ── Monogram pointer tilt ──────────────────────────────────────────── */
+  /* ── Monogram pointer tilt + hero spotlight ─────────────────────────── */
   (function tilt() {
     var mark = $('#mark');
+    var spot = $('#spot');
+    var hero = document.querySelector('.hero');
     if (!mark || reduced || !fine) return;
 
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
@@ -305,6 +307,13 @@
     window.addEventListener('pointermove', function (e) {
       tx = (e.clientX / window.innerWidth  - .5) * 2;
       ty = (e.clientY / window.innerHeight - .5) * 2;
+
+      if (spot && hero) {
+        var r = hero.getBoundingClientRect();
+        spot.style.transform =
+          'translate3d(' + (e.clientX - r.left) + 'px,' + (e.clientY - r.top) + 'px,0)';
+      }
+
       if (!raf) raf = requestAnimationFrame(tick);
     }, { passive: true });
 

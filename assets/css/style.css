@@ -4,9 +4,10 @@
 
 /* ── Tokens ─────────────────────────────────────────────────────────────── */
 :root {
-  --bg:   #000;
-  --bg-2: #060606;
-  --fg:   #fff;
+  --bg:    #000;
+  --bg-2:  #060606;
+  --fg:    #fff;
+  --ivory: #ece6d9;   /* logotype warm white, matched to hopexai.ai */
   --mut:  #8e8e8e;
   --ln:   rgba(255, 255, 255, .22);
   --ln-2: rgba(255, 255, 255, .08);
@@ -284,6 +285,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   to   { transform: translate3d(-14vw, -12vh, 0) scale(.92); }
 }
 
+/* soft light that tracks the pointer */
+.spot {
+  position: absolute;
+  top: 0; left: 0;
+  width: 42vmax; height: 42vmax;
+  margin: -21vmax 0 0 -21vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.075), transparent 62%);
+  filter: blur(30px);
+  opacity: 0;
+  transition: opacity .6s var(--ease);
+  will-change: transform;
+}
+.hero:hover .spot { opacity: 1; }
+
 /* slow vertical light beam */
 .beam {
   position: absolute;
@@ -423,19 +439,46 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   70%, 100% { transform: translateY(115%); opacity: 0; }
 }
 
-/* ── Wordmark ───────────────────────────────────────────────────────────── */
+/* ── Wordmark ───────────────────────────────────────────────────────────────
+   Matched to the hopexai.ai logotype: ultra-extended heavy grotesque in warm
+   ivory with a bevelled edge. The width axis only reaches 125%, so the rest of
+   the stretch comes from scaleX() — which is also what gives the reference its
+   heavy verticals against lighter horizontals. */
+.wordmark, .brandtype {
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -.03em;
+  color: var(--ivory);
+  text-shadow:
+    0 -.014em 0    rgba(255, 255, 255, .8),
+    0  .018em .01em rgba(0, 0, 0, .65),
+    0  .05em  .04em rgba(0, 0, 0, .5),
+    0  0      .45em rgba(255, 255, 255, .22);
+}
+
 .hero__title {
   display: flex;
   justify-content: center;
-  font-size: clamp(2rem, 8.5vw, 6rem);
-  font-weight: 900;
-  font-stretch: 118%;
-  line-height: .9;
-  letter-spacing: clamp(.08em, 1.6vw, .2em);
-  text-indent: clamp(.08em, 1.6vw, .2em);  /* balances the trailing letter-space */
-  overflow: hidden;
+  width: 100%;
+  line-height: .95;
 }
-.hero__title .ltr {
+
+.wordmark {
+  position: relative;
+  display: inline-flex;
+  font-size: clamp(1.45rem, 9vw, 7rem);
+  padding: .1em .05em .06em;
+  overflow: hidden;                 /* clips the letter rise */
+  transform: scaleX(1.55);
+  transform-origin: center;
+  animation: wordGlow 6s ease-in-out 2.4s infinite;
+}
+@keyframes wordGlow {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.13); }
+}
+
+.wordmark .ltr {
   display: block;
   transform: translateY(115%);
   animation: rise 1s var(--ease) forwards;
@@ -443,6 +486,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   will-change: transform;
 }
 @keyframes rise { to { transform: translateY(0); } }
+
+/* nav + footer lockups */
+.brandtype {
+  display: inline-block;
+  transform: scaleX(1.4);
+  transform-origin: left center;
+  margin-right: .42em;
+}
 
 .hero__sub {
   margin-top: clamp(.9rem, 2.5vh, 1.5rem);
