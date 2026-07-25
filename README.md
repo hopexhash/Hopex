@@ -1,7 +1,7 @@
-# HOPEX — hopex.ai
+# HOPEX — hopexmusic.com
 
-Single-page artist site. Dark, monochrome, animated: the glowing HX monogram
-carries the hero, with oversized type and hard edges under it.
+Single-page artist site. Dark, monochrome, animated: the extended HOPEX
+logotype carries the hero, with the HX monogram small and still above it.
 
 No build step, no dependencies, no API keys. Open `index.html` and it runs.
 
@@ -145,9 +145,10 @@ the folder as-is with no build command and publish directory `.`
 - Responsive from 320px up. The hero lockup is sized against both viewport
   axes, so the call-to-action stays above the fold on short laptop screens —
   verified at 320, 390, 1024, 1366, 1440 and 1920px wide.
-- Motion: monogram power-on flicker, idle float, pulsing halo, orbiting light
-  arc, pointer tilt and scroll dissolve; drifting background light; marquee
-  ticker; scroll-progress bar; staggered section reveals.
+- Motion: the logotype rises letter by letter and pulses slowly; drifting
+  background light with a pointer-tracked spotlight; marquee ticker;
+  scroll-progress bar; staggered section reveals. The monogram itself is
+  deliberately still — it only fades in.
 - Accessible: semantic landmarks, keyboard-operable video tiles and lightbox,
   visible focus rings, skip link. Every animation is disabled under
   `prefers-reduced-motion`.
