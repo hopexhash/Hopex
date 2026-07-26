@@ -21,7 +21,7 @@ with the glow as a real alpha channel, so it composites cleanly over anything.
 
 | File | Used for |
 | --- | --- |
-| `hopex-mark.webp` | hero monogram, nav, footer (900px, ~190 KB) |
+| `hopex-mark.webp` | hero monogram, nav, footer (320px, ~24 KB) |
 | `hopex-mark.png` | fallback for browsers without WebP |
 | `hopex-icon.png` | favicon / touch icon |
 | `hopex-og.png` | 1200×630 link preview card |
