@@ -19,7 +19,20 @@
   if (location.hash) {
     history.replaceState(null, '', location.pathname + location.search);
   }
-  window.addEventListener('load', function () { window.scrollTo(0, 0); });
+  // Correct the offset early, and never after the visitor has moved. The load
+  // event can fire many seconds in on a slow connection, and scrolling someone
+  // back to the top at that point would be worse than the bug being fixed.
+  (function correctScroll() {
+    var moved = false;
+    var onMove = function () { moved = true; };
+    window.addEventListener('wheel', onMove, { passive: true, once: true });
+    window.addEventListener('touchmove', onMove, { passive: true, once: true });
+    window.addEventListener('keydown', onMove, { once: true });
+
+    var fix = function () { if (!moved) window.scrollTo(0, 0); };
+    fix();
+    document.addEventListener('DOMContentLoaded', fix, { once: true });
+  })();
 
   // In-page nav scrolls without writing a hash, so a later reload still opens
   // at the top. Focus still moves, so keyboard and screen-reader users land in
@@ -63,6 +76,10 @@
       document.documentElement.setAttribute('data-theme', mode);
       btn.setAttribute('aria-pressed', mode === 'light' ? 'true' : 'false');
       btn.lastElementChild.textContent = mode === 'light' ? 'Dark' : 'Light';
+      // The visible label is hidden under 700px, so the button would otherwise
+      // have no accessible name at all on a phone.
+      btn.setAttribute('aria-label',
+        mode === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
 
       var meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', mode === 'light' ? '#fbfaf7' : '#000000');

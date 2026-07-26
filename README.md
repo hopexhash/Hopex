@@ -153,3 +153,19 @@ the folder as-is with no build command and publish directory `.`
   visible focus rings, skip link. Every animation is disabled under
   `prefers-reduced-motion`.
 - The video lightbox uses `youtube-nocookie.com`.
+- **Fonts load non-blocking.** As an ordinary stylesheet, the Google Fonts link
+  held first paint hostage to `fonts.googleapis.com` — measured at 12.8s when
+  that host was unreachable, against 260ms when it answered. It now loads via
+  `media="print"` + `onload`, so the page paints in the fallback face at ~210ms
+  and upgrades when Archivo lands. Keep it that way if you add more fonts.
+- Page weight is ~83 KB. The monogram is served at 320px because nothing on the
+  page displays it larger than 88px; a 900px copy was costing 140 KB alone.
+- Touch targets in the nav are grown to 44px with pseudo-elements, so the hit
+  area is thumb-sized without changing how anything looks.
+- `404.html`, `robots.txt` and `sitemap.xml` are in the repo root. GitHub Pages
+  serves the 404 automatically for any unknown path.
+
+### Verified
+
+Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px, in
+both themes: no violations. No horizontal overflow from 320px to 1920px.

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Not found — HOPEX</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/assets/img/hopex-icon.png" type="image/png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+<noscript>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+</noscript>
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<style>
+  .lost {
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    gap: clamp(1rem, 3vh, 1.75rem);
+    padding: var(--pad);
+    text-align: center;
+  }
+  .lost__mark { width: clamp(52px, 7vw, 88px); height: auto; filter: var(--glyph-filter); }
+  .lost__code {
+    font-family: var(--f-mono); font-size: .7rem;
+    letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
+  }
+  .lost__title {
+    font-size: clamp(2.5rem, 12vw, 7rem); font-weight: 900; font-stretch: 118%;
+    line-height: .85; letter-spacing: -.045em;
+  }
+  .lost__note { color: var(--mut); font-size: .95rem; max-width: 34ch; }
+</style>
+</head>
+
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<main class="lost">
+  <picture>
+    <source srcset="/assets/img/hopex-mark.webp" type="image/webp">
+    <img class="lost__mark" src="/assets/img/hopex-mark.png" alt="" width="320" height="320">
+  </picture>
+
+  <p class="lost__code">Error 404</p>
+  <h1 class="lost__title">Lost<br>the beat</h1>
+  <p class="lost__note">That page does not exist. Everything lives on the one page anyway.</p>
+
+  <a class="btn btn--solid" href="/">
+    <span>Back to HOPEX</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+  </a>
+</main>
+</body>
+</html>

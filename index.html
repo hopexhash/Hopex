@@ -29,7 +29,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preload" as="image" href="assets/img/hopex-mark.webp" type="image/webp" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Loaded non-blocking. As a plain stylesheet this held first paint for as long
+     as fonts.googleapis.com took to answer — 12.8s when it was unreachable, vs
+     260ms when it responded. media="print" makes it a low-priority fetch that
+     is swapped in on load, so the page paints immediately in the fallback face
+     and upgrades to Archivo when it arrives. -->
+<link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+<noscript>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
+</noscript>
 
 <link rel="stylesheet" href="assets/css/style.css">
 
@@ -74,14 +86,14 @@
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
 <header class="nav" id="top">
   <a class="nav__mark" href="#top" aria-label="HOPEX — top of page">
-    <img src="assets/img/hopex-mark.webp" alt="" width="256" height="256" decoding="async">
+    <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" decoding="async">
   </a>
   <nav class="nav__links" aria-label="Primary">
     <a href="#sounds">Sounds</a>
     <a href="#video">Video</a>
     <a href="#connect">Connect</a>
   </nav>
-  <button class="nav__theme" type="button" id="theme" aria-pressed="false">
+  <button class="nav__theme" type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">
     <span class="nav__theme-box" aria-hidden="true"></span>
     <span>Light</span>
   </button>
@@ -109,7 +121,7 @@
         <picture>
           <source srcset="assets/img/hopex-mark.webp" type="image/webp">
           <img class="mark__img" src="assets/img/hopex-mark.png" alt=""
-               width="1000" height="1000" fetchpriority="high" decoding="async">
+               width="320" height="320" fetchpriority="high" decoding="async">
         </picture>
       </div>
 
@@ -241,7 +253,7 @@
 <footer class="foot">
   <div class="foot__row">
     <span class="foot__mark">
-      <img src="assets/img/hopex-mark.webp" alt="" width="256" height="256" loading="lazy" decoding="async">
+      <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" loading="lazy" decoding="async">
       <span class="brandtype">HOPEX</span>
     </span>
     <span>Amsterdam &mdash; NL</span>
