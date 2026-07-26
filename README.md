@@ -1,7 +1,8 @@
 # HOPEX — hopexmusic.com
 
-Single-page artist site. Dark, monochrome, animated: the extended HOPEX
-logotype carries the hero, with the HX monogram small and still above it.
+Single-page artist site. Slow-drifting glowing orbs under a field of sparkles,
+glass panels on top. The eight platforms sit in the hero as icons — no captions
+— so anyone landing here can be listening in one tap.
 
 No build step, no dependencies, no API keys. Open `index.html` and it runs.
 
@@ -70,10 +71,23 @@ renders empty.
 > The IDs currently in `config.js` are placeholders picked from search results —
 > replace them with videos from your own channel.
 
-### Socials
+### Platforms
 
-Add, remove or reorder entries in the `socials` array. The page order follows
-the array order.
+`socials` in `config.js` drives the icon row. Each entry needs:
+
+```js
+{ name: 'Spotify', icon: 'spotify', c: '#1ed760', url: 'https://…' }
+```
+
+- `icon` picks a glyph from the set in `main.js` — available: `spotify`,
+  `applemusic`, `soundcloud`, `beatport`, `youtube`, `instagram`, `tiktok`,
+  `x`, `facebook`
+- `c` is the hover glow colour
+- `name` is what the tooltip shows and what screen readers announce. The icons
+  carry no visible text, so this is the only label there is — never leave it out.
+
+Order in the array is order on the page. A TikTok slot is commented out in
+`config.js`, ready for the handle.
 
 ---
 
@@ -137,39 +151,35 @@ the folder as-is with no build command and publish directory `.`
 
 ## Notes
 
-- Dark by default, with a **Light / Dark toggle in the nav**. The choice is
-  remembered in `localStorage`; with no stored choice the site follows the
-  visitor's OS setting, falling back to dark. Light is a real second palette
-  (paper `#fbfaf7`, ink `#0a0a0a`) rather than a naive inversion — every colour
-  is a custom property at the top of `style.css`.
-- **Everything is centred** — section headings, copy, the social rows, contact
-  and footer all sit on the page's centre line. The section heads were a three
-  column grid (number | title | aside); they are now a single centred stack, so
-  there is no separate wide-screen layout to keep in sync.
-- Responsive from 320px up. The hero lockup is sized against both viewport
-  axes, so the call-to-action stays above the fold on short laptop screens —
-  verified at 320, 390, 1024, 1366, 1440 and 1920px wide.
-- Motion: the logotype rises letter by letter and pulses slowly; drifting
-  background light with a pointer-tracked spotlight; marquee ticker;
-  scroll-progress bar; staggered section reveals. The monogram itself is
-  deliberately still — it only fades in.
+- **The background.** Four large blurred orbs (violet, cyan, rose) drift on
+  68–92 second loops — slow enough to read as ambient light rather than motion.
+  A field of sparkles twinkles on top, scattered on load with the count scaled
+  to the viewport so a phone isn't asked to animate a desktop's worth. Both are
+  `aria-hidden` and the sparkles are dropped entirely under reduced motion.
+- **Icons only.** The platform row has no captions. The name lives in
+  `aria-label` and in a tooltip that appears on hover and on keyboard focus, so
+  nothing is lost to either sighted or screen-reader visitors.
+- Dark by default, with a toggle in the nav. The choice is remembered in
+  `localStorage`; with no stored choice the site follows the visitor's OS
+  setting. Light is a real second palette — the same three hues bloom softly on
+  paper — not an inversion.
+- Responsive from 320px up; the icon row becomes a 4x2 grid below 560px so it
+  never wraps 5+3.
 - Accessible: semantic landmarks, keyboard-operable video tiles and lightbox,
-  visible focus rings, skip link. Every animation is disabled under
-  `prefers-reduced-motion`.
+  visible focus rings, skip link, 44px+ touch targets.
+- **Fonts load non-blocking.** As an ordinary stylesheet the Google Fonts link
+  held first paint hostage to `fonts.googleapis.com` — 12.8s when that host was
+  unreachable against 260ms when it answered. `media="print"` + `onload` paints
+  at ~210ms regardless. Keep it that way if you add fonts.
+- The `HOPEX` logotype is stretched with `scaleX`. That multiplies the element's
+  *box*, not its text, so it needs `width: fit-content` or it silently overflows
+  the viewport on a phone.
+- `404.html`, `robots.txt` and `sitemap.xml` are in the repo root.
 - The video lightbox uses `youtube-nocookie.com`.
-- **Fonts load non-blocking.** As an ordinary stylesheet, the Google Fonts link
-  held first paint hostage to `fonts.googleapis.com` — measured at 12.8s when
-  that host was unreachable, against 260ms when it answered. It now loads via
-  `media="print"` + `onload`, so the page paints in the fallback face at ~210ms
-  and upgrades when Archivo lands. Keep it that way if you add more fonts.
-- Page weight is ~83 KB. The monogram is served at 320px because nothing on the
-  page displays it larger than 88px; a 900px copy was costing 140 KB alone.
-- Touch targets in the nav are grown to 44px with pseudo-elements, so the hit
-  area is thumb-sized without changing how anything looks.
-- `404.html`, `robots.txt` and `sitemap.xml` are in the repo root. GitHub Pages
-  serves the 404 automatically for any unknown path.
 
 ### Verified
 
-Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px, in
-both themes: no violations. No horizontal overflow from 320px to 1920px.
+Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px in
+both themes: no violations. No horizontal overflow from 320px up. Booking
+address, all eight platform links, theme toggle and video lightbox verified in
+a real browser.

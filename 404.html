@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Not found — HOPEX</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#05060b">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="/assets/img/hopex-icon.png" type="image/png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" media="print" onload="this.media='all';this.onload=null"
       href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
 <noscript>
@@ -27,7 +29,10 @@
     padding: var(--pad);
     text-align: center;
   }
-  .lost__mark { width: clamp(52px, 7vw, 88px); height: auto; filter: var(--glyph-filter); }
+  .lost__mark {
+    width: clamp(56px, 8vw, 92px); height: auto;
+    filter: var(--glyph-filter) drop-shadow(0 0 20px color-mix(in srgb, var(--violet) 80%, transparent));
+  }
   .lost__code {
     font-family: var(--f-mono); font-size: .7rem;
     letter-spacing: .3em; text-transform: uppercase; color: var(--mut);
@@ -36,12 +41,35 @@
     font-size: clamp(2.5rem, 12vw, 7rem); font-weight: 900; font-stretch: 118%;
     line-height: .85; letter-spacing: -.045em;
   }
-  .lost__note { color: var(--mut); font-size: .95rem; max-width: 34ch; }
+  .lost__note { color: var(--mut); font-size: .95rem; max-width: 36ch; }
+  /* the shared .btn was retired in the redesign, so this page carries its own */
+  .lost__back {
+    display: inline-flex; align-items: center; gap: .6rem;
+    margin-top: .5rem;
+    padding: .9rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-line);
+    background: var(--glass);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+    transition: transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .lost__back:hover {
+    transform: translateY(-3px);
+    border-color: var(--glass-hi);
+    box-shadow: 0 12px 34px color-mix(in srgb, var(--violet) 40%, transparent);
+  }
+  .lost__back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 </style>
 </head>
 
 <body>
-<div class="grain" aria-hidden="true"></div>
+<div class="sky" aria-hidden="true">
+  <span class="orb orb--1"></span>
+  <span class="orb orb--2"></span>
+  <span class="orb orb--3"></span>
+</div>
 
 <main class="lost">
   <picture>
@@ -53,7 +81,7 @@
   <h1 class="lost__title">Lost<br>the beat</h1>
   <p class="lost__note">That page does not exist. Everything lives on the one page anyway.</p>
 
-  <a class="btn btn--solid" href="/">
+  <a class="lost__back" href="/">
     <span>Back to HOPEX</span>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
   </a>

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HOPEX — Electronic / Trap / Future Bass — Amsterdam</title>
 
-<meta name="description" content="HOPEX — Amsterdam based producer and DJ. Electronic, trap and future bass. Latest releases on Spotify and YouTube.">
-<meta name="theme-color" content="#000000">
+<meta name="description" content="HOPEX — Amsterdam based producer and DJ. Electronic, trap and future bass. Listen on Spotify, Apple Music, SoundCloud and Beatport.">
+<meta name="theme-color" content="#05060b">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://hopexmusic.com/">
 
@@ -29,11 +29,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preload" as="image" href="assets/img/hopex-mark.webp" type="image/webp" fetchpriority="high">
-<!-- Loaded non-blocking. As a plain stylesheet this held first paint for as long
-     as fonts.googleapis.com took to answer — 12.8s when it was unreachable, vs
-     260ms when it responded. media="print" makes it a low-priority fetch that
-     is swapped in on load, so the page paints immediately in the fallback face
-     and upgrades to Archivo when it arrives. -->
+
+<!-- Non-blocking: as a plain stylesheet this held first paint for as long as
+     fonts.googleapis.com took to answer (12.8s when unreachable, 260ms when it
+     answered). media="print" + onload paints immediately in the fallback face. -->
 <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Space+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" media="print" onload="this.media='all';this.onload=null"
@@ -53,12 +52,15 @@
   "genre": ["Electronic", "Trap", "Future Bass"],
   "foundingLocation": { "@type": "Place", "name": "Amsterdam, Netherlands" },
   "url": "https://hopexmusic.com/",
+  "email": "prodhopex@gmail.com",
   "logo": "https://hopexmusic.com/assets/img/hopex-icon.png",
   "sameAs": [
     "https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO",
+    "https://music.apple.com/us/artist/hopex/1211296904",
+    "https://soundcloud.com/prodhopex",
+    "https://www.beatport.com/artist/hopex/704053",
     "https://www.youtube.com/@HOPEX",
     "https://www.instagram.com/prodhopex/",
-    "https://soundcloud.com/prodhopex",
     "https://x.com/prodhopex",
     "https://www.facebook.com/prodhopex/"
   ]
@@ -67,21 +69,19 @@
 </head>
 
 <body>
-<div class="grain" aria-hidden="true"></div>
+
+<!-- ══════════════════════ ATMOSPHERE ══════════════════════
+     Glowing orbs drifting underneath, sparkles twinkling on top.
+     Both are decorative and hidden from assistive tech. -->
+<div class="sky" aria-hidden="true">
+  <span class="orb orb--1"></span>
+  <span class="orb orb--2"></span>
+  <span class="orb orb--3"></span>
+  <span class="orb orb--4"></span>
+  <div class="sparkles" id="sparkles"></div>
+</div>
 
 <a class="skip" href="#sounds">Skip to music</a>
-
-<!-- ══════════════════════════════ TICKER ══════════════════════════════ -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker__track">
-    <span class="ticker__set">
-      <em>●</em> Available for bookings &amp; collabs <em>●</em> Amsterdam, NL <em>●</em> Electronic / Trap / Future Bass <em>●</em> New music out now <em>●</em> Est. 2018
-    </span>
-    <span class="ticker__set">
-      <em>●</em> Available for bookings &amp; collabs <em>●</em> Amsterdam, NL <em>●</em> Electronic / Trap / Future Bass <em>●</em> New music out now <em>●</em> Est. 2018
-    </span>
-  </div>
-</div>
 
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
 <header class="nav" id="top">
@@ -91,58 +91,38 @@
   <nav class="nav__links" aria-label="Primary">
     <a href="#sounds">Sounds</a>
     <a href="#video">Video</a>
-    <a href="#connect">Connect</a>
+    <a href="#booking">Booking</a>
   </nav>
   <button class="nav__theme" type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">
-    <span class="nav__theme-box" aria-hidden="true"></span>
-    <span>Light</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="nav__theme-icon">
+      <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+      <circle cx="12" cy="12" r="4"/>
+    </svg>
   </button>
-  <span class="nav__progress" id="progress" aria-hidden="true"></span>
 </header>
 
 <main>
 
   <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
   <section class="hero" aria-labelledby="hero-title">
+    <p class="hero__eyebrow">Amsterdam &mdash; NL</p>
 
-    <div class="hero__bg" aria-hidden="true">
-      <span class="orb orb--a"></span>
-      <span class="orb orb--b"></span>
-      <span class="beam"></span>
-      <span class="spot" id="spot"></span>
+    <div class="mark" id="mark">
+      <picture>
+        <source srcset="assets/img/hopex-mark.webp" type="image/webp">
+        <img class="mark__img" src="assets/img/hopex-mark.png" alt=""
+             width="320" height="320" fetchpriority="high" decoding="async">
+      </picture>
     </div>
 
-    <p class="hero__eyebrow"><span>(00)</span> Amsterdam &mdash; NL</p>
+    <h1 class="hero__title" id="hero-title">
+      <span class="wordmark"><span class="ltr" style="--i:0">H</span><span class="ltr" style="--i:1">O</span><span class="ltr" style="--i:2">P</span><span class="ltr" style="--i:3">E</span><span class="ltr" style="--i:4">X</span></span>
+    </h1>
 
-    <div class="hero__inner">
+    <p class="hero__sub">Producer &amp; DJ &mdash; Electronic / Trap / Future Bass</p>
 
-      <!-- Monogram -->
-      <div class="mark" id="mark">
-        <picture>
-          <source srcset="assets/img/hopex-mark.webp" type="image/webp">
-          <img class="mark__img" src="assets/img/hopex-mark.png" alt=""
-               width="320" height="320" fetchpriority="high" decoding="async">
-        </picture>
-      </div>
-
-      <h1 class="hero__title" id="hero-title">
-        <span class="wordmark"><span class="ltr" style="--i:0">H</span><span class="ltr" style="--i:1">O</span><span class="ltr" style="--i:2">P</span><span class="ltr" style="--i:3">E</span><span class="ltr" style="--i:4">X</span></span>
-      </h1>
-
-      <p class="hero__sub">Producer &amp; DJ &mdash; Electronic / Trap / Future Bass</p>
-
-      <div class="hero__cta">
-        <a class="btn btn--solid" href="#sounds">
-          <span>Listen</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M12 20l-7-7M12 20l7-7"/></svg>
-        </a>
-        <a class="btn" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
-          <span>Spotify</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-        </a>
-      </div>
-
-    </div>
+    <!-- Icons only. Names live in aria-label and the hover tooltip. -->
+    <ul class="links" id="links" aria-label="Listen and follow"></ul>
 
     <div class="hero__scroll" aria-hidden="true">
       <span>Scroll</span>
@@ -150,118 +130,47 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════ FACTS STRIP ══════════════════════════════ -->
-  <section class="facts" aria-label="At a glance">
-    <div class="facts__cell" data-reveal>
-      <span class="lbl">Discipline</span>
-      <span class="val">Producer / DJ</span>
-    </div>
-    <div class="facts__cell" data-reveal>
-      <span class="lbl">Sound</span>
-      <span class="val">Electronic &middot; Trap &middot; Future&nbsp;Bass</span>
-    </div>
-    <div class="facts__cell" data-reveal>
-      <span class="lbl">Base</span>
-      <span class="val">Amsterdam, Netherlands</span>
-    </div>
-    <div class="facts__cell" data-reveal>
-      <span class="lbl">Since</span>
-      <span class="val">2018</span>
-    </div>
-  </section>
-
   <!-- ══════════════════════════════ SPOTIFY ══════════════════════════════ -->
   <section class="sec" id="sounds" aria-labelledby="sounds-title">
-    <div class="sec__head">
-      <p class="sec__num" data-reveal>(01)</p>
-      <h2 class="sec__title" id="sounds-title" data-reveal>Latest<br>Sounds</h2>
-      <div class="sec__aside" data-reveal>
-        <p>Streaming now on Spotify. The player below pulls straight from the artist profile &mdash; it is always current, no refresh needed.</p>
-        <a class="btn" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">
-          <span>Open profile</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-        </a>
-      </div>
-    </div>
+    <h2 class="sec__title" id="sounds-title" data-reveal>Latest Sounds</h2>
+    <p class="sec__note" data-reveal>Straight from the artist profile &mdash; always current.</p>
 
-    <div class="frame" data-reveal>
-      <div class="frame__bar">
-        <span>Spotify &mdash; Artist</span>
-        <span class="frame__dot" aria-hidden="true"></span>
-      </div>
-      <div class="frame__body frame__body--spotify">
-        <iframe
-          title="HOPEX on Spotify — latest and most played tracks"
-          src="https://open.spotify.com/embed/artist/0dE2azLipjakJifWO2xrOO?utm_source=generator&amp;theme=0"
-          width="100%" height="480" frameborder="0" loading="lazy"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          allowfullscreen></iframe>
-      </div>
+    <div class="card" data-reveal>
+      <iframe
+        title="HOPEX on Spotify — latest and most played tracks"
+        src="https://open.spotify.com/embed/artist/0dE2azLipjakJifWO2xrOO?utm_source=generator&amp;theme=0"
+        width="100%" height="420" frameborder="0" loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        allowfullscreen></iframe>
     </div>
-
-    <ul class="dsp" data-reveal>
-      <li><a href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO" target="_blank" rel="noopener">Spotify</a></li>
-      <li><a href="https://soundcloud.com/prodhopex" target="_blank" rel="noopener">SoundCloud</a></li>
-      <li><a href="https://www.youtube.com/@HOPEX" target="_blank" rel="noopener">YouTube</a></li>
-    </ul>
   </section>
 
   <!-- ══════════════════════════════ YOUTUBE ══════════════════════════════ -->
   <section class="sec" id="video" aria-labelledby="video-title">
-    <div class="sec__head">
-      <p class="sec__num" data-reveal>(02)</p>
-      <h2 class="sec__title" id="video-title" data-reveal>Latest<br>Video</h2>
-      <div class="sec__aside" data-reveal>
-        <p>Most recent uploads from the HOPEX channel. Tap any tile to play it right here.</p>
-        <a class="btn" href="https://www.youtube.com/@HOPEX" target="_blank" rel="noopener">
-          <span>Subscribe</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-        </a>
-      </div>
-    </div>
+    <h2 class="sec__title" id="video-title" data-reveal>Latest Video</h2>
+    <p class="sec__note" data-reveal>Newest uploads from the channel. Tap any tile to play it here.</p>
 
     <div class="videos" id="videos" aria-live="polite" aria-busy="true">
       <p class="videos__status" id="videos-status">Loading latest uploads&hellip;</p>
     </div>
   </section>
 
-  <!-- ══════════════════════════════ SOCIALS ══════════════════════════════ -->
-  <section class="sec sec--flush" id="connect" aria-labelledby="connect-title">
-    <div class="sec__head">
-      <p class="sec__num" data-reveal>(03)</p>
-      <h2 class="sec__title" id="connect-title" data-reveal>Connect</h2>
-      <div class="sec__aside" data-reveal>
-        <p>Everywhere at once. Follow, stream, or say something.</p>
-      </div>
+  <!-- ══════════════════════════════ BOOKING ══════════════════════════════ -->
+  <section class="sec" id="booking" aria-labelledby="booking-title">
+    <h2 class="sec__title" id="booking-title" data-reveal>Booking</h2>
+    <p class="sec__note" data-reveal>Shows, collabs, remixes &mdash; get in touch.</p>
+
+    <div class="card card--mail" data-reveal>
+      <a class="mail" id="contact-mail" href="#"></a>
     </div>
-
-    <ul class="social" id="social"></ul>
-  </section>
-
-  <!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
-  <section class="contact" aria-labelledby="contact-title">
-    <p class="sec__num" data-reveal>(04)</p>
-    <h2 class="contact__title" id="contact-title" data-reveal>
-      Bookings<br><span>&amp; Enquiries</span>
-    </h2>
-    <a class="contact__mail" id="contact-mail" href="#" data-reveal></a>
   </section>
 
 </main>
 
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
 <footer class="foot">
-  <div class="foot__row">
-    <span class="foot__mark">
-      <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" loading="lazy" decoding="async">
-      <span class="brandtype">HOPEX</span>
-    </span>
-    <span>Amsterdam &mdash; NL</span>
-  </div>
-  <div class="foot__row foot__row--end">
-    <span>&copy; <span id="year">2026</span> HOPEX. All rights reserved.</span>
-    <a href="#top">Back to top &uarr;</a>
-  </div>
+  <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" loading="lazy" decoding="async">
+  <p>&copy; <span id="year">2026</span> HOPEX &mdash; Amsterdam, NL</p>
 </footer>
 
 <!-- ══════════════════════════════ LIGHTBOX ══════════════════════════════ -->
