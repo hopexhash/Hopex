@@ -1,8 +1,9 @@
 # HOPEX — hopexmusic.com
 
-Single-page artist site. Slow-drifting glowing orbs under a field of sparkles,
-glass panels on top. The eight platforms sit in the hero as icons — no captions
-— so anyone landing here can be listening in one tap.
+One page. Not "one page plus some sections" — the whole site fits on a single
+screen with nothing below the fold. Glowing orbs drift under a field of
+sparkles; the eight platforms sit in the middle as icons with no captions, so
+anyone landing here can be listening in one tap.
 
 No build step, no dependencies, no API keys. Open `index.html` and it runs.
 
@@ -34,42 +35,8 @@ in the CSS or JS references the image dimensions.
 
 ## Editing the site
 
-Everything that changes over time lives in **`assets/js/config.js`**: the
-contact email, the social links and their order, and the YouTube setup.
-
-### Music — Spotify
-
-The Spotify section uses the official artist embed, which always shows your
-current top and latest tracks. Nothing to update, ever. If you ever change
-artist profiles, swap the ID in the `<iframe src>` in `index.html`.
-
-### Video — YouTube
-
-The grid works in two modes:
-
-**1. Live (recommended).** Put your channel ID in `config.js`:
-
-```js
-youtube: { channelId: 'UCxxxxxxxxxxxxxxxxxxxxxx', ... }
-```
-
-The grid then fetches your newest uploads from the channel's public RSS feed
-on every page load — new video goes up, it appears here automatically.
-
-To find your channel ID:
-- YouTube Studio → **Settings → Channel → Advanced settings**, or
-- open `youtube.com/@HOPEX` → View Page Source → search for `channelId`.
-
-It is 24 characters and starts with `UC`.
-
-**2. Curated (fallback).** Leave `channelId` empty and the `videos` array in
-`config.js` is used instead. Each entry needs the 11-character ID from the
-watch URL (`youtube.com/watch?v=THIS_PART`). The curated list is also used
-automatically if the live fetch is ever unavailable, so the grid never
-renders empty.
-
-> The IDs currently in `config.js` are placeholders picked from search results —
-> replace them with videos from your own channel.
+Everything lives in **`assets/js/config.js`**: the booking address and the
+platform list.
 
 ### Platforms
 
@@ -89,6 +56,16 @@ renders empty.
 Order in the array is order on the page. A TikTok slot is commented out in
 `config.js`, ready for the handle.
 
+The glyphs are the platforms' **official logos**, lifted verbatim from
+[simple-icons](https://simpleicons.org). To add one that isn't in the set:
+
+```bash
+npm i simple-icons
+node -e "console.log(require('simple-icons').siDeezer.path)"
+```
+
+and paste the path into the `ICONS` map at the top of `main.js`.
+
 ---
 
 ## Running it locally
@@ -98,8 +75,8 @@ npx http-server -p 8080 -c-1
 # → http://127.0.0.1:8080
 ```
 
-Opening `index.html` directly via `file://` mostly works too, but the live
-YouTube fetch needs `http://`.
+Opening `index.html` directly via `file://` works too — there is nothing that
+needs a server.
 
 ---
 
@@ -151,35 +128,35 @@ the folder as-is with no build command and publish directory `.`
 
 ## Notes
 
-- **The background.** Four large blurred orbs (violet, cyan, rose) drift on
-  68–92 second loops — slow enough to read as ambient light rather than motion.
-  A field of sparkles twinkles on top, scattered on load with the count scaled
-  to the viewport so a phone isn't asked to animate a desktop's worth. Both are
-  `aria-hidden` and the sparkles are dropped entirely under reduced motion.
-- **Icons only.** The platform row has no captions. The name lives in
-  `aria-label` and in a tooltip that appears on hover and on keyboard focus, so
-  nothing is lost to either sighted or screen-reader visitors.
-- Dark by default, with a toggle in the nav. The choice is remembered in
-  `localStorage`; with no stored choice the site follows the visitor's OS
-  setting. Light is a real second palette — the same three hues bloom softly on
-  paper — not an inversion.
-- Responsive from 320px up; the icon row becomes a 4x2 grid below 560px so it
-  never wraps 5+3.
-- Accessible: semantic landmarks, keyboard-operable video tiles and lightbox,
-  visible focus rings, skip link, 44px+ touch targets.
-- **Fonts load non-blocking.** As an ordinary stylesheet the Google Fonts link
-  held first paint hostage to `fonts.googleapis.com` — 12.8s when that host was
-  unreachable against 260ms when it answered. `media="print"` + `onload` paints
-  at ~210ms regardless. Keep it that way if you add fonts.
-- The `HOPEX` logotype is stretched with `scaleX`. That multiplies the element's
-  *box*, not its text, so it needs `width: fit-content` or it silently overflows
-  the viewport on a phone.
+- **One screen, no scroll.** The page is `min-height: 100svh` and centred.
+  Verified at 390x844 and 1440x900: the document is exactly the viewport height.
+- **The background.** Four blurred orbs (violet, cyan, rose) drift on 26–36
+  second loops with real travel, so the motion is visible without being busy.
+  An earlier pass ran them at 68–92s over short distances, which just read as a
+  static image.
+- **Reduced motion is honoured without gutting the page.** Travel stops — orbs
+  hold still, the mark stops hovering, entrances land instantly — but the
+  sparkles keep their opacity-only twinkle and every glow stays. A blanket
+  `animation: none` left the site looking dead to anyone with Reduce Motion on,
+  which on iOS is a lot of people.
+- **Icons only.** No captions anywhere. The platform name lives in `aria-label`
+  and in a tooltip shown on hover *and* keyboard focus, so the label is never
+  lost to sighted or screen-reader visitors.
+- Dark by default with a toggle top-right; the choice is stored in
+  `localStorage`, otherwise the OS preference decides. Light is a real second
+  palette, not an inversion.
+- Below 560px the icon row becomes a 4x2 grid — left to wrap it read 5+3.
+- **Fonts load non-blocking.** As a plain stylesheet the Google Fonts link held
+  first paint hostage to `fonts.googleapis.com` — 12.8s when that host was
+  unreachable against 260ms when it answered.
+- The `HOPEX` logotype is stretched with `scaleX`, which multiplies the
+  element's *box* rather than its text. It needs `width: fit-content` or it
+  silently overflows the viewport on a phone.
 - `404.html`, `robots.txt` and `sitemap.xml` are in the repo root.
-- The video lightbox uses `youtube-nocookie.com`.
 
 ### Verified
 
-Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px in
-both themes: no violations. No horizontal overflow from 320px up. Booking
-address, all eight platform links, theme toggle and video lightbox verified in
-a real browser.
+Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px in both
+themes: no violations. No horizontal or vertical overflow. Booking address, all
+eight platform links, the theme toggle and the reduced-motion path verified in a
+real browser.

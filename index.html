@@ -27,7 +27,6 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preload" as="image" href="assets/img/hopex-mark.webp" type="image/webp" fetchpriority="high">
 
 <!-- Non-blocking: as a plain stylesheet this held first paint for as long as
@@ -71,8 +70,7 @@
 <body>
 
 <!-- ══════════════════════ ATMOSPHERE ══════════════════════
-     Glowing orbs drifting underneath, sparkles twinkling on top.
-     Both are decorative and hidden from assistive tech. -->
+     Glowing orbs drifting underneath, sparkles twinkling on top. -->
 <div class="sky" aria-hidden="true">
   <span class="orb orb--1"></span>
   <span class="orb orb--2"></span>
@@ -81,105 +79,31 @@
   <div class="sparkles" id="sparkles"></div>
 </div>
 
-<a class="skip" href="#sounds">Skip to music</a>
+<button class="theme" type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+    <circle cx="12" cy="12" r="4"/>
+  </svg>
+</button>
 
-<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
-<header class="nav" id="top">
-  <a class="nav__mark" href="#top" aria-label="HOPEX — top of page">
-    <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" decoding="async">
-  </a>
-  <nav class="nav__links" aria-label="Primary">
-    <a href="#sounds">Sounds</a>
-    <a href="#video">Video</a>
-    <a href="#booking">Booking</a>
-  </nav>
-  <button class="nav__theme" type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">
-    <svg viewBox="0 0 24 24" aria-hidden="true" class="nav__theme-icon">
-      <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
-      <circle cx="12" cy="12" r="4"/>
-    </svg>
-  </button>
-</header>
+<!-- ══════════════════════ THE PAGE — all of it ══════════════════════ -->
+<main class="page">
 
-<main>
+  <img class="mark" src="assets/img/hopex-mark.webp" alt=""
+       width="320" height="320" fetchpriority="high" decoding="async">
 
-  <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-  <section class="hero" aria-labelledby="hero-title">
-    <p class="hero__eyebrow">Amsterdam &mdash; NL</p>
+  <h1 class="wordmark">
+    <span class="ltr" style="--i:0">H</span><span class="ltr" style="--i:1">O</span><span class="ltr" style="--i:2">P</span><span class="ltr" style="--i:3">E</span><span class="ltr" style="--i:4">X</span>
+  </h1>
 
-    <div class="mark" id="mark">
-      <picture>
-        <source srcset="assets/img/hopex-mark.webp" type="image/webp">
-        <img class="mark__img" src="assets/img/hopex-mark.png" alt=""
-             width="320" height="320" fetchpriority="high" decoding="async">
-      </picture>
-    </div>
+  <p class="tagline">Producer &amp; DJ &mdash; Amsterdam</p>
 
-    <h1 class="hero__title" id="hero-title">
-      <span class="wordmark"><span class="ltr" style="--i:0">H</span><span class="ltr" style="--i:1">O</span><span class="ltr" style="--i:2">P</span><span class="ltr" style="--i:3">E</span><span class="ltr" style="--i:4">X</span></span>
-    </h1>
+  <!-- Icons only. Names live in aria-label and the hover tooltip. -->
+  <ul class="links" id="links" aria-label="Listen and follow"></ul>
 
-    <p class="hero__sub">Producer &amp; DJ &mdash; Electronic / Trap / Future Bass</p>
-
-    <!-- Icons only. Names live in aria-label and the hover tooltip. -->
-    <ul class="links" id="links" aria-label="Listen and follow"></ul>
-
-    <div class="hero__scroll" aria-hidden="true">
-      <span>Scroll</span>
-      <i></i>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ SPOTIFY ══════════════════════════════ -->
-  <section class="sec" id="sounds" aria-labelledby="sounds-title">
-    <h2 class="sec__title" id="sounds-title" data-reveal>Latest Sounds</h2>
-    <p class="sec__note" data-reveal>Straight from the artist profile &mdash; always current.</p>
-
-    <div class="card" data-reveal>
-      <iframe
-        title="HOPEX on Spotify — latest and most played tracks"
-        src="https://open.spotify.com/embed/artist/0dE2azLipjakJifWO2xrOO?utm_source=generator&amp;theme=0"
-        width="100%" height="420" frameborder="0" loading="lazy"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        allowfullscreen></iframe>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ YOUTUBE ══════════════════════════════ -->
-  <section class="sec" id="video" aria-labelledby="video-title">
-    <h2 class="sec__title" id="video-title" data-reveal>Latest Video</h2>
-    <p class="sec__note" data-reveal>Newest uploads from the channel. Tap any tile to play it here.</p>
-
-    <div class="videos" id="videos" aria-live="polite" aria-busy="true">
-      <p class="videos__status" id="videos-status">Loading latest uploads&hellip;</p>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ BOOKING ══════════════════════════════ -->
-  <section class="sec" id="booking" aria-labelledby="booking-title">
-    <h2 class="sec__title" id="booking-title" data-reveal>Booking</h2>
-    <p class="sec__note" data-reveal>Shows, collabs, remixes &mdash; get in touch.</p>
-
-    <div class="card card--mail" data-reveal>
-      <a class="mail" id="contact-mail" href="#"></a>
-    </div>
-  </section>
+  <a class="mail" id="mail" href="#"></a>
 
 </main>
-
-<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
-<footer class="foot">
-  <img src="assets/img/hopex-mark.webp" alt="" width="320" height="320" loading="lazy" decoding="async">
-  <p>&copy; <span id="year">2026</span> HOPEX &mdash; Amsterdam, NL</p>
-</footer>
-
-<!-- ══════════════════════════════ LIGHTBOX ══════════════════════════════ -->
-<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Video player" hidden>
-  <button class="lb__close" id="lb-close" type="button" aria-label="Close video">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
-  </button>
-  <div class="lb__stage"><div class="lb__slot" id="lb-slot"></div></div>
-</div>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>

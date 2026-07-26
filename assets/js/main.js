@@ -6,113 +6,83 @@
 
   var CFG = window.HOPEX || {};
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var $ = function (s, r) { return (r || document).querySelector(s); };
-
+  var $ = function (s) { return document.querySelector(s); };
   var SVGNS = 'http://www.w3.org/2000/svg';
 
-  /* ── Platform glyphs ────────────────────────────────────────────────────
-     Drawn on a 24x24 grid. `f` paths are filled, `s` paths are stroked, so a
-     single icon can mix both (Instagram's frame vs its lens). */
-  var ICONS = {
-    spotify: { f: ['M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.55 14.43a.62.62 0 0 1-.86.21c-2.34-1.43-5.29-1.75-8.77-.96a.63.63 0 0 1-.28-1.22c3.8-.87 7.07-.5 9.7 1.11.3.18.39.57.21.86zm1.22-2.72a.78.78 0 0 1-1.07.26c-2.68-1.65-6.77-2.13-9.94-1.16a.78.78 0 1 1-.45-1.5c3.62-1.1 8.13-.56 11.2 1.33.37.22.49.71.26 1.07zm.1-2.83c-3.21-1.91-8.5-2.08-11.57-1.15a.94.94 0 0 1-.54-1.79c3.52-1.07 9.36-.86 13.06 1.34a.94.94 0 0 1-.95 1.6z'] },
-
-    applemusic: {
-      s: ['M4.6 2.8h14.8a1.8 1.8 0 0 1 1.8 1.8v14.8a1.8 1.8 0 0 1-1.8 1.8H4.6a1.8 1.8 0 0 1-1.8-1.8V4.6a1.8 1.8 0 0 1 1.8-1.8z'],
-      f: ['M16.6 6.1v7.6a2.2 2.2 0 1 1-1.45-2.06V8.9l-4.7 1.02v5.9a2.2 2.2 0 1 1-1.45-2.06V8.2l7.6-1.65z']
-    },
-
-    soundcloud: {
-      s: ['M3 14.6v3.2M5.7 12.6v5.2M8.4 10.4v7.4M11.1 12.2v5.6'],
-      f: ['M13.6 17.8V8.1a5.1 5.1 0 0 1 5.02 4.13 3.35 3.35 0 0 1-.42 6.66h-4.6a.7.7 0 0 1-.7-.7v-.39z']
-    },
-
-    /* Beatport has no simple mark to reproduce faithfully, so this reads as
-       what the site is: a record store. */
-    beatport: {
-      s: ['M12 2.9a9.1 9.1 0 1 1 0 18.2 9.1 9.1 0 0 1 0-18.2z', 'M12 7.9a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2z'],
-      f: ['M12 10.7a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6z']
-    },
-
-    youtube: { f: ['M21.6 7.2a2.5 2.5 0 0 0-1.76-1.78C18.25 5 12 5 12 5s-6.25 0-7.84.42A2.5 2.5 0 0 0 2.4 7.2 26.2 26.2 0 0 0 2 12a26.2 26.2 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.78C5.75 19 12 19 12 19s6.25 0 7.84-.42a2.5 2.5 0 0 0 1.76-1.78A26.2 26.2 0 0 0 22 12a26.2 26.2 0 0 0-.4-4.8zM10 15.2V8.8l5.5 3.2-5.5 3.2z'] },
-
-    instagram: {
-      s: ['M7.8 3.2h8.4a4.6 4.6 0 0 1 4.6 4.6v8.4a4.6 4.6 0 0 1-4.6 4.6H7.8a4.6 4.6 0 0 1-4.6-4.6V7.8a4.6 4.6 0 0 1 4.6-4.6z',
-          'M12 7.9a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2z'],
-      f: ['M17.1 5.7a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z']
-    },
-
-    tiktok: { f: ['M14 3h2.6a5.6 5.6 0 0 0 4.4 4.3v2.7a8.2 8.2 0 0 1-4.4-1.4v6.2A6.1 6.1 0 1 1 10.5 9v2.8a3.3 3.3 0 1 0 2.5 3.2V3z'] },
-
-    x: { f: ['M17.6 3h3.1l-6.8 7.8L22 21h-6.3l-4.9-6-5.6 6H2.1l7.3-8.3L2 3h6.4l4.4 5.5L17.6 3zm-1.1 16h1.7L7.6 4.9H5.8L16.5 19z'] },
-
-    facebook: { f: ['M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.5-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z'] }
+  /* ── Official brand marks ───────────────────────────────────────────────
+     Taken verbatim from simple-icons, so these are each platform's real logo
+     rather than an approximation. All are single filled paths on a 24x24 grid.
+     Regenerate with: npm i simple-icons, then read siSpotify.path etc. */
+var ICONS = {
+    spotify: 'M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z',
+    applemusic: 'M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 001.57-.1c.822-.106 1.596-.35 2.295-.81a5.046 5.046 0 001.88-2.207c.186-.42.293-.87.37-1.324.113-.675.138-1.358.137-2.04-.002-3.8 0-7.595-.003-11.393zm-6.423 3.99v5.712c0 .417-.058.827-.244 1.206-.29.59-.76.962-1.388 1.14-.35.1-.706.157-1.07.173-.95.045-1.773-.6-1.943-1.536a1.88 1.88 0 011.038-2.022c.323-.16.67-.25 1.018-.324.378-.082.758-.153 1.134-.24.274-.063.457-.23.51-.516a.904.904 0 00.02-.193c0-1.815 0-3.63-.002-5.443a.725.725 0 00-.026-.185c-.04-.15-.15-.243-.304-.234-.16.01-.318.035-.475.066-.76.15-1.52.303-2.28.456l-2.325.47-1.374.278c-.016.003-.032.01-.048.013-.277.077-.377.203-.39.49-.002.042 0 .086 0 .13-.002 2.602 0 5.204-.003 7.805 0 .42-.047.836-.215 1.227-.278.64-.77 1.04-1.434 1.233-.35.1-.71.16-1.075.172-.96.036-1.755-.6-1.92-1.544-.14-.812.23-1.685 1.154-2.075.357-.15.73-.232 1.108-.31.287-.06.575-.116.86-.177.383-.083.583-.323.6-.714v-.15c0-2.96 0-5.922.002-8.882 0-.123.013-.25.042-.37.07-.285.273-.448.546-.518.255-.066.515-.112.774-.165.733-.15 1.466-.296 2.2-.444l2.27-.46c.67-.134 1.34-.27 2.01-.403.22-.043.442-.088.663-.106.31-.025.523.17.554.482.008.073.012.148.012.223.002 1.91.002 3.822 0 5.732z',
+    soundcloud: 'M23.999 14.165c-.052 1.796-1.612 3.169-3.4 3.169h-8.18a.68.68 0 0 1-.675-.683V7.862a.747.747 0 0 1 .452-.724s.75-.513 2.333-.513a5.364 5.364 0 0 1 2.763.755 5.433 5.433 0 0 1 2.57 3.54c.282-.08.574-.121.868-.12.884 0 1.73.358 2.347.992s.948 1.49.922 2.373ZM10.721 8.421c.247 2.98.427 5.697 0 8.672a.264.264 0 0 1-.53 0c-.395-2.946-.22-5.718 0-8.672a.264.264 0 0 1 .53 0ZM9.072 9.448c.285 2.659.37 4.986-.006 7.655a.277.277 0 0 1-.55 0c-.331-2.63-.256-5.02 0-7.655a.277.277 0 0 1 .556 0Zm-1.663-.257c.27 2.726.39 5.171 0 7.904a.266.266 0 0 1-.532 0c-.38-2.69-.257-5.21 0-7.904a.266.266 0 0 1 .532 0Zm-1.647.77a26.108 26.108 0 0 1-.008 7.147.272.272 0 0 1-.542 0 27.955 27.955 0 0 1 0-7.147.275.275 0 0 1 .55 0Zm-1.67 1.769c.421 1.865.228 3.5-.029 5.388a.257.257 0 0 1-.514 0c-.21-1.858-.398-3.549 0-5.389a.272.272 0 0 1 .543 0Zm-1.655-.273c.388 1.897.26 3.508-.01 5.412-.026.28-.514.283-.54 0-.244-1.878-.347-3.54-.01-5.412a.283.283 0 0 1 .56 0Zm-1.668.911c.4 1.268.257 2.292-.026 3.572a.257.257 0 0 1-.514 0c-.241-1.262-.354-2.312-.023-3.572a.283.283 0 0 1 .563 0Z',
+    beatport: 'M21.429 17.055a7.114 7.114 0 0 1-.794 3.246 6.917 6.917 0 0 1-2.181 2.492 6.698 6.698 0 0 1-3.063 1.163 6.653 6.653 0 0 1-3.239-.434 6.796 6.796 0 0 1-2.668-1.932 7.03 7.03 0 0 1-1.481-2.983 7.124 7.124 0 0 1 .049-3.345 7.015 7.015 0 0 1 1.566-2.937l-4.626 4.73-2.421-2.479 5.201-5.265a3.791 3.791 0 0 0 1.066-2.675V0h3.41v6.613a7.172 7.172 0 0 1-.519 2.794 7.02 7.02 0 0 1-1.559 2.353l-.153.156a6.768 6.768 0 0 1 3.49-1.725 6.687 6.687 0 0 1 3.845.5 6.873 6.873 0 0 1 2.959 2.564 7.118 7.118 0 0 1 1.118 3.8Zm-3.089 0a3.89 3.89 0 0 0-.611-2.133 3.752 3.752 0 0 0-1.666-1.424 3.65 3.65 0 0 0-2.158-.233 3.704 3.704 0 0 0-1.92 1.037 3.852 3.852 0 0 0-1.031 1.955 3.908 3.908 0 0 0 .205 2.213c.282.7.76 1.299 1.374 1.721a3.672 3.672 0 0 0 2.076.647 3.637 3.637 0 0 0 2.635-1.096c.347-.351.622-.77.81-1.231.188-.461.285-.956.286-1.456Z',
+    youtube: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z',
+    instagram: 'M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077',
+    x: 'M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z',
+    facebook: 'M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z',
+    tiktok: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z'
   };
-
   function glyph(key) {
-    var spec = ICONS[key];
     var svg = document.createElementNS(SVGNS, 'svg');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('aria-hidden', 'true');
-    if (!spec) return svg;
-
-    (spec.f || []).forEach(function (d) {
-      var p = document.createElementNS(SVGNS, 'path');
-      p.setAttribute('d', d);
-      p.setAttribute('fill', 'currentColor');
-      svg.appendChild(p);
-    });
-    (spec.s || []).forEach(function (d) {
-      var p = document.createElementNS(SVGNS, 'path');
-      p.setAttribute('d', d);
-      p.setAttribute('fill', 'none');
-      p.setAttribute('stroke', 'currentColor');
-      p.setAttribute('stroke-width', '1.8');
-      p.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(p);
-    });
+    if (!ICONS[key]) return svg;
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('d', ICONS[key]);
+    p.setAttribute('fill', 'currentColor');
+    svg.appendChild(p);
     return svg;
   }
 
-  /* ── Always open at the top ─────────────────────────────────────────────
-     The browser restores the previous scroll offset, and in-page links leave
-     a #hash the next load jumps to. Kill both — this is a one-page site. */
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-
-  (function correctScroll() {
-    var moved = false;
-    var onMove = function () { moved = true; };
-    window.addEventListener('wheel', onMove, { passive: true, once: true });
-    window.addEventListener('touchmove', onMove, { passive: true, once: true });
-    window.addEventListener('keydown', onMove, { once: true });
-
-    // Never after the visitor has moved: the load event can fire seconds in on
-    // a slow connection, and yanking someone back would be worse than the bug.
-    var fix = function () { if (!moved) window.scrollTo(0, 0); };
-    fix();
-    document.addEventListener('DOMContentLoaded', fix, { once: true });
+  /* ── Booking address ──────────────────────────────────────────────────── */
+  (function mail() {
+    var el = $('#mail');
+    if (!el || !CFG.email) return;
+    el.href = 'mailto:' + CFG.email;
+    el.textContent = CFG.email;
   })();
 
-  var year = $('#year');
-  if (year) year.textContent = String(new Date().getFullYear());
+  /* ── Platform icons ───────────────────────────────────────────────────── */
+  (function links() {
+    var list = $('#links');
+    if (!list || !Array.isArray(CFG.socials)) return;
+
+    CFG.socials.forEach(function (s) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = s.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.style.setProperty('--c', s.c || 'var(--violet)');
+      a.dataset.name = s.name;
+      // The icon carries no caption, so the name has to live here.
+      a.setAttribute('aria-label', s.name + ' \u2014 opens in a new tab');
+      a.appendChild(glyph(s.icon));
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+  })();
 
   /* ── Sparkles ───────────────────────────────────────────────────────────
      Scattered once at load. Count scales with the viewport so a phone is not
-     asked to animate a desktop's worth of them. */
+     asked to animate a desktop's worth. They stay under reduced motion — the
+     twinkle is opacity only there, no movement. */
   (function sparkles() {
     var host = $('#sparkles');
-    if (!host || reduced) return;
+    if (!host) return;
 
-    var n = Math.round(Math.min(90, Math.max(34, (window.innerWidth * window.innerHeight) / 22000)));
+    var n = Math.round(Math.min(90, Math.max(34, (window.innerWidth * window.innerHeight) / 20000)));
     var frag = document.createDocumentFragment();
 
     for (var i = 0; i < n; i++) {
       var s = document.createElement('i');
       s.style.left = (Math.random() * 100).toFixed(2) + '%';
       s.style.top  = (Math.random() * 100).toFixed(2) + '%';
-      s.style.setProperty('--s', (Math.random() * 2.2 + 1).toFixed(2) + 'px');
-      s.style.setProperty('--d', (Math.random() * 6 + 5).toFixed(2) + 's');   // slow twinkle
-      s.style.setProperty('--t', (Math.random() * 8).toFixed(2) + 's');
+      s.style.setProperty('--s', (Math.random() * 2.2 + 1.2).toFixed(2) + 'px');
+      s.style.setProperty('--d', (Math.random() * 4 + 3).toFixed(2) + 's');
+      s.style.setProperty('--t', (Math.random() * 6).toFixed(2) + 's');
       frag.appendChild(s);
     }
     host.appendChild(frag);
@@ -143,237 +113,5 @@
       try { localStorage.setItem('hopex-theme', next); } catch (e) {}
     });
   })();
-
-  /* ── Booking address ──────────────────────────────────────────────────── */
-  (function contact() {
-    var el = $('#contact-mail');
-    if (!el || !CFG.email) return;
-    el.href = 'mailto:' + CFG.email;
-    el.textContent = CFG.email;
-  })();
-
-  /* ── Platform icons ───────────────────────────────────────────────────── */
-  (function links() {
-    var list = $('#links');
-    if (!list || !Array.isArray(CFG.socials)) return;
-
-    CFG.socials.forEach(function (s) {
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      a.href = s.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.style.setProperty('--c', s.c || 'var(--violet)');
-      a.dataset.name = s.name;
-      // The icon carries no caption, so the name has to live here.
-      a.setAttribute('aria-label', s.name + ' — opens in a new tab');
-      a.appendChild(glyph(s.icon));
-      li.appendChild(a);
-      list.appendChild(li);
-    });
-  })();
-
-  /* ── Videos ───────────────────────────────────────────────────────────── */
-  (function videos() {
-    var grid   = $('#videos');
-    var status = $('#videos-status');
-    if (!grid) return;
-
-    var yt      = CFG.youtube || {};
-    var limit   = yt.limit || 6;
-    var channel = (yt.channelId || '').trim();
-
-    // Public read-only relays, because YouTube's RSS feed sends no CORS header.
-    // Progressive enhancement only — the curated list catches every failure.
-    var RELAYS = [
-      function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
-      function (u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
-      function (u) { return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); }
-    ];
-
-    if (channel) {
-      fetchLatest(channel)
-        .then(function (items) { render(items.length ? items : curated()); })
-        .catch(function () { render(curated()); });
-    } else {
-      render(curated());
-    }
-
-    function curated() {
-      return (yt.videos || []).slice(0, limit).map(function (v) {
-        return { id: v.id, title: v.title || 'HOPEX', date: '' };
-      });
-    }
-
-    function fetchLatest(id) {
-      var feed = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + encodeURIComponent(id);
-      return RELAYS.reduce(function (chain, relay) {
-        return chain.catch(function () {
-          return fetch(relay(feed), { cache: 'no-store' })
-            .then(function (r) {
-              if (!r.ok) throw new Error('relay ' + r.status);
-              return r.text();
-            })
-            .then(parseFeed);
-        });
-      }, Promise.reject());
-    }
-
-    function parseFeed(xml) {
-      var doc = new DOMParser().parseFromString(xml, 'text/xml');
-      if (doc.querySelector('parsererror')) throw new Error('bad feed');
-
-      var out = Array.prototype.slice.call(doc.getElementsByTagName('entry'))
-        .slice(0, limit)
-        .map(function (e) {
-          return { id: text(e, 'videoId'), title: text(e, 'title'), date: text(e, 'published') };
-        })
-        .filter(function (v) { return v.id; });
-
-      if (!out.length) throw new Error('empty feed');
-      return out;
-    }
-
-    function text(scope, tag) {
-      // namespace-agnostic, which keeps yt:videoId simple
-      var n = scope.getElementsByTagName(tag)[0];
-      return n ? (n.textContent || '').trim() : '';
-    }
-
-    function render(items) {
-      grid.setAttribute('aria-busy', 'false');
-
-      if (!items.length) {
-        if (status) status.textContent = 'Head to the channel for the latest uploads.';
-        return;
-      }
-      if (status) status.remove();
-
-      items.forEach(function (v, i) { grid.appendChild(card(v, i)); });
-      observe(grid.querySelectorAll('[data-reveal]'));
-    }
-
-    function card(v, i) {
-      var art = document.createElement('article');
-      art.className = 'vid';
-      art.setAttribute('data-reveal', '');
-      art.style.setProperty('--d', (i % 3 * 0.08) + 's');
-
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'vid__btn';
-      btn.setAttribute('aria-label', 'Play ' + (v.title || 'video'));
-
-      var img = document.createElement('img');
-      img.src = 'https://i.ytimg.com/vi/' + v.id + '/maxresdefault.jpg';
-      img.alt = '';
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.width = 1280;
-      img.height = 720;
-      // maxres is not generated for every upload; hqdefault always exists.
-      img.addEventListener('error', function once() {
-        img.removeEventListener('error', once);
-        img.src = 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
-      });
-
-      var play = document.createElement('span');
-      play.className = 'vid__play';
-      var svg = document.createElementNS(SVGNS, 'svg');
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.setAttribute('aria-hidden', 'true');
-      var tri = document.createElementNS(SVGNS, 'path');
-      tri.setAttribute('d', 'M7 4.5v15l13-7.5-13-7.5z');
-      svg.appendChild(tri);
-      play.appendChild(svg);
-
-      btn.append(img, play);
-      btn.addEventListener('click', function () { openLightbox(v.id, v.title); });
-
-      var name = document.createElement('h3');
-      name.className = 'vid__name';
-      name.textContent = v.title || 'HOPEX';
-
-      art.append(btn, name);
-
-      if (v.date) {
-        var when = document.createElement('time');
-        when.className = 'vid__date';
-        when.dateTime = v.date;
-        var d = new Date(v.date);
-        when.textContent = isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-        art.appendChild(when);
-      }
-      return art;
-    }
-  })();
-
-  /* ── Lightbox ─────────────────────────────────────────────────────────── */
-  var lb = $('#lightbox'), lbSlot = $('#lb-slot'), lbShut = $('#lb-close'), lastFocus = null;
-
-  function openLightbox(id, title) {
-    if (!lb || !lbSlot) return;
-    lastFocus = document.activeElement;
-
-    var frame = document.createElement('iframe');
-    frame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1';
-    frame.title = title || 'HOPEX video';
-    frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    frame.allowFullscreen = true;
-
-    lbSlot.replaceChildren(frame);
-    lb.hidden = false;
-    document.body.classList.add('is-locked');
-    if (lbShut) lbShut.focus();
-  }
-
-  function closeLightbox() {
-    if (!lb || lb.hidden) return;
-    lb.hidden = true;
-    lbSlot.replaceChildren();
-    document.body.classList.remove('is-locked');
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-
-  if (lbShut) lbShut.addEventListener('click', closeLightbox);
-  if (lb) lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
-
-  /* ── In-page nav, without leaving a hash behind ───────────────────────── */
-  document.addEventListener('click', function (e) {
-    var link = e.target.closest && e.target.closest('a[href^="#"]');
-    if (!link) return;
-
-    var id = link.getAttribute('href').slice(1);
-    var target = id ? document.getElementById(id) : document.body;
-    if (!target) return;
-
-    e.preventDefault();
-    target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
-    target.focus({ preventScroll: true });
-  });
-
-  /* ── Scroll reveal ────────────────────────────────────────────────────── */
-  var io = null;
-  function observe(nodes) {
-    if (!nodes || !nodes.length) return;
-
-    if (reduced || !('IntersectionObserver' in window)) {
-      Array.prototype.forEach.call(nodes, function (n) { n.classList.add('in'); });
-      return;
-    }
-    if (!io) {
-      io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        });
-      }, { rootMargin: '0px 0px -10% 0px', threshold: .1 });
-    }
-    Array.prototype.forEach.call(nodes, function (n) { io.observe(n); });
-  }
-  observe(document.querySelectorAll('[data-reveal]'));
 
 })();
