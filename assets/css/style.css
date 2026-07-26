@@ -383,6 +383,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   right: var(--pad);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: .8rem;
   margin: 0;
   font-size: .7rem;
@@ -391,6 +392,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   animation: fadeUp .9s var(--ease) .1s forwards;
 }
 .hero__eyebrow span { color: var(--fg); }
+/* a rule on each side keeps the label optically centred */
+.hero__eyebrow::before,
 .hero__eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--ln); }
 
 @keyframes fadeUp {
@@ -549,6 +552,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .facts__cell {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: .45rem;
   padding: clamp(1rem, 3vw, 1.9rem) var(--pad);
   border-right: var(--rule) solid var(--ln);
@@ -567,17 +572,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .sec--flush { padding-bottom: 0; }
 
 .sec__head {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--gap);
   margin-bottom: clamp(2rem, 6vh, 4rem);
-}
-@media (min-width: 900px) {
-  .sec__head {
-    grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 22rem);
-    align-items: end;
-  }
-  .sec__head .sec__num { align-self: start; padding-top: .55rem; }
 }
 
 .sec__num { font-size: .68rem; color: var(--mut); }
@@ -590,8 +590,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   letter-spacing: -.045em;
 }
 
-.sec__aside { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
-.sec__aside p { font-size: .95rem; line-height: 1.55; color: var(--mut); max-width: 34ch; }
+.sec__aside { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+.sec__aside p { font-size: .95rem; line-height: 1.55; color: var(--mut); max-width: 42ch; }
 
 /* ── Framed embed ───────────────────────────────────────────────────────── */
 .frame {
@@ -603,7 +603,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .frame__bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: .6rem;
   padding: .6rem .9rem;
   border-bottom: var(--rule) solid var(--ln);
   font-size: .62rem;
@@ -623,6 +624,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .dsp {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: .5rem 1.5rem;
   margin-top: 1.25rem;
   font-size: .66rem;
@@ -639,10 +641,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .videos {
   display: grid;
   gap: clamp(1rem, 2.5vw, 2rem);
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+  /* auto-fit (not auto-fill) collapses empty tracks, so an odd number of videos
+   still sits centred instead of hugging the left edge */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
 }
 .videos__status {
   grid-column: 1 / -1;
+  text-align: center;
   font-family: var(--f-mono);
   font-size: .72rem;
   letter-spacing: .12em;
@@ -708,6 +713,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 
 .vid__name {
+  text-align: center;
   font-size: clamp(1rem, 1.7vw, 1.2rem);
   font-weight: 700;
   letter-spacing: -.015em;
@@ -718,6 +724,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   -webkit-box-orient: vertical;
 }
 .vid__date {
+  text-align: center;
   font-family: var(--f-mono);
   font-size: .6rem;
   letter-spacing: .12em;
@@ -734,6 +741,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: relative;
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 1rem;
   padding: clamp(1rem, 3.5vh, 2rem) var(--pad);
   margin: 0 calc(var(--pad) * -1);
@@ -770,7 +778,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .social a:hover .social__handle, .social a:focus-visible .social__handle { color: var(--bg); }
 
 .social__arrow {
-  margin-left: auto;
   align-self: center;
   width: clamp(20px, 3vw, 30px);
   height: clamp(20px, 3vw, 30px);
@@ -787,6 +794,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .contact {
   padding: clamp(3.5rem, 12vh, 9rem) var(--pad);
   border-bottom: var(--rule) solid var(--ln);
+  text-align: center;
 }
 .contact__title {
   font-size: clamp(2.5rem, 9vw, 7.5rem);
@@ -822,8 +830,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   display: flex;
   flex-wrap: wrap;
   gap: .5rem 1.5rem;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  text-align: center;
 }
 .foot__row--end { margin-top: 1.25rem; }
 .foot__mark {

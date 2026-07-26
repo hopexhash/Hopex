@@ -142,6 +142,10 @@ the folder as-is with no build command and publish directory `.`
   visitor's OS setting, falling back to dark. Light is a real second palette
   (paper `#fbfaf7`, ink `#0a0a0a`) rather than a naive inversion — every colour
   is a custom property at the top of `style.css`.
+- **Everything is centred** — section headings, copy, the social rows, contact
+  and footer all sit on the page's centre line. The section heads were a three
+  column grid (number | title | aside); they are now a single centred stack, so
+  there is no separate wide-screen layout to keep in sync.
 - Responsive from 320px up. The hero lockup is sized against both viewport
   axes, so the call-to-action stays above the fold on short laptop screens —
   verified at 320, 390, 1024, 1366, 1440 and 1920px wide.
