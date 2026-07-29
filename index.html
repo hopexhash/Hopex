@@ -23,6 +23,67 @@
 <link rel="icon" href="./assets/img/hopex-icon.png" type="image/png" />
 <link rel="apple-touch-icon" href="./assets/img/hopex-icon.png" />
 
+<script>
+/* Self-heal a stale cached document.
+   Every build gives the bundle a new hashed filename, but GitHub Pages serves
+   this HTML with max-age=600. A tab still holding the previous HTML asks for a
+   script that no longer exists, React never mounts, and the page is simply
+   black — no error, no text, nothing to click.
+
+   Two triggers, because they catch different failures: the capture-phase
+   listener fires the instant a script or stylesheet 404s, and the timeout also
+   covers a bundle that loads but throws before mounting.
+
+   The query string is what makes the recovery reliable — a plain reload may be
+   answered from the very cache entry that is stale, while a URL the cache has
+   never seen cannot be. sessionStorage caps this at one attempt per tab, so a
+   genuinely broken deploy degrades to a black page rather than a reload loop.
+
+   Inline and first in <head> on purpose: Vite hoists the module script into
+   <head>, and it strips inline handler attributes, so this has to be a real
+   listener registered before that tag is parsed. */
+(function () {
+  var KEY = 'hopex:recovered';
+  var done = false;
+
+  function recover() {
+    if (done) return;
+    done = true;
+    try {
+      if (sessionStorage.getItem(KEY)) return;
+      sessionStorage.setItem(KEY, '1');
+    } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + Date.now());
+  }
+
+  /* Scripts only, and only while nothing has mounted yet. An earlier version
+     also listened for LINK failures, which meant a blocked Google Fonts
+     stylesheet — routine with a privacy extension, and harmless because the
+     fallback face is fine — reloaded a page that was working perfectly. The
+     root check likewise keeps a late-failing chunk from wiping a live page. */
+  addEventListener('error', function (e) {
+    var t = e.target;
+    if (!t || t.tagName !== 'SCRIPT') return;
+    var root = document.getElementById('root');
+    if (root && root.children.length) return;
+    recover();
+  }, true);
+
+  addEventListener('load', function () {
+    if (document.getElementById('root').children.length) {
+      done = true;
+      try { sessionStorage.removeItem(KEY); } catch (e) {}
+      // Mounted fine — take the cache-busting query back out of the address bar.
+      if (location.search) history.replaceState(null, '', location.pathname);
+      return;
+    }
+    setTimeout(function () {
+      if (!document.getElementById('root').children.length) recover();
+    }, 4000);
+  });
+})();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <!-- Non-blocking: as a plain stylesheet this held first paint for as long as
