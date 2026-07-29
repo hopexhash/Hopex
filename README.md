@@ -53,9 +53,13 @@ deploy:
 `vite.config.ts` sets `base: './'` so the same build works both at that
 sub-path and at the apex domain. Do **not** switch it to an absolute path.
 
-> **Do not add a `CNAME` file.** This site publishes from a custom Actions
-> workflow, and GitHub ignores `CNAME` in that mode — the domain lives in the
-> repository's Pages settings instead.
+> **The root `CNAME` file is inert.** It is written by GitHub when a custom
+> domain is set in Settings, but the artifact this workflow uploads is `dist/`,
+> which does not contain it — so the domain comes from the Pages settings only.
+> That is deliberate: while a custom domain is active, GitHub redirects the
+> `github.io` URL to it, so pointing at a domain that does not resolve makes the
+> site unreachable at *both* addresses. Leave it out of `public/` until DNS is
+> back and the domain is verified.
 
 ### Custom domain — hopexmusic.com
 
