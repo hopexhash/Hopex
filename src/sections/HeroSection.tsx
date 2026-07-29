@@ -7,7 +7,9 @@ const NAV = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Releases', href: '#releases' },
-  { label: 'Contact', href: 'mailto:prodhopex@gmail.com' },
+  // Points at the footer rather than straight to mailto: the footer holds both
+  // the booking address and every platform link, so it answers more intents.
+  { label: 'Contact', href: '#contact' },
 ];
 
 export default function HeroSection() {
