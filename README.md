@@ -1,162 +1,101 @@
 # HOPEX — hopexmusic.com
 
-One page. Not "one page plus some sections" — the whole site fits on a single
-screen with nothing below the fold. Glowing orbs drift under a field of
-sparkles; the eight platforms sit in the middle as icons with no captions, so
-anyone landing here can be listening in one tap.
-
-No build step, no dependencies, no API keys. Open `index.html` and it runs.
+One page, scroll-driven. Vite + React + TypeScript + Tailwind + Framer Motion.
 
 ```
-index.html
-assets/css/style.css
-assets/js/config.js   ← the only file you normally need to edit
-assets/js/main.js
-assets/img/           ← logo, favicon, social card
+index.html               ← Vite entry: meta, JSON-LD, non-blocking font load
+src/
+  main.tsx
+  App.tsx                ← section order
+  index.css              ← reset, #0C0C0C base, .hero-heading gradient
+  sections/
+    HeroSection.tsx      ← nav, fitted headline, glowing mark, contact button
+    MarqueeSection.tsx   ← two counter-scrolling rows
+    AboutSection.tsx     ← per-character scroll reveal
+    ServicesSection.tsx  ← white panel, five numbered services
+    ProjectsSection.tsx  ← sticky-stacking release cards
+  components/
+    FitText.tsx  FadeIn.tsx  Magnet.tsx  AnimatedText.tsx  Buttons.tsx
+public/                  ← copied verbatim into dist/
+  assets/img/            ← logo, favicon, social card
+  assets/art/            ← 21 generated WebP tiles
+  404.html  robots.txt  sitemap.xml
 ```
 
-## The logo
-
-`assets/img/` is generated from the original artwork. The source was a white
-monogram on a black plate; it has been auto-cropped to the glyph and rebuilt
-with the glow as a real alpha channel, so it composites cleanly over anything.
-
-| File | Used for |
-| --- | --- |
-| `hopex-mark.webp` | hero monogram, nav, footer (320px, ~24 KB) |
-| `hopex-mark.png` | fallback for browsers without WebP |
-| `hopex-icon.png` | favicon / touch icon |
-| `hopex-og.png` | 1200×630 link preview card |
-
-To swap in new artwork, replace all four keeping the same filenames — nothing
-in the CSS or JS references the image dimensions.
-
----
-
-## Editing the site
-
-Everything lives in **`assets/js/config.js`**: the booking address and the
-platform list.
-
-### Platforms
-
-`socials` in `config.js` drives the icon row. Each entry needs:
-
-```js
-{ name: 'Spotify', icon: 'spotify', c: '#1ed760', url: 'https://…' }
-```
-
-- `icon` picks a glyph from the set in `main.js` — available: `spotify`,
-  `applemusic`, `soundcloud`, `beatport`, `youtube`, `instagram`, `tiktok`,
-  `x`, `facebook`
-- `c` is the hover glow colour
-- `name` is what the tooltip shows and what screen readers announce. The icons
-  carry no visible text, so this is the only label there is — never leave it out.
-
-Order in the array is order on the page. A TikTok slot is commented out in
-`config.js`, ready for the handle.
-
-The glyphs are the platforms' **official logos**, lifted verbatim from
-[simple-icons](https://simpleicons.org). To add one that isn't in the set:
+## Running it
 
 ```bash
-npm i simple-icons
-node -e "console.log(require('simple-icons').siDeezer.path)"
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # → dist/
+npm run preview
 ```
 
-and paste the path into the `ICONS` map at the top of `main.js`.
+## Editing
 
----
-
-## Running it locally
-
-```bash
-npx http-server -p 8080 -c-1
-# → http://127.0.0.1:8080
-```
-
-Opening `index.html` directly via `file://` works too — there is nothing that
-needs a server.
-
----
+- **Booking address** — `prodhopex@gmail.com`, in `src/components/Buttons.tsx`
+  (`ContactButton`) and in the JSON-LD block in `index.html`.
+- **Platform links** — the `sameAs` array in `index.html`, and wherever a
+  section links out. A TikTok slot is still missing a handle.
+- **Services copy** — the array at the top of `src/sections/ServicesSection.tsx`.
+- **Releases** — the array at the top of `src/sections/ProjectsSection.tsx`.
+- **Artwork** — drop replacements into `public/assets/art/` keeping the
+  `tile-NN.webp` / `work-NN.webp` names; nothing references their dimensions.
 
 ## Deploying
 
-**It is already live.** `.github/workflows/pages.yml` publishes the repo root to
-GitHub Pages on every push to the working branch, so a push is a deploy:
+`.github/workflows/pages.yml` runs `npm ci && npm run build` and publishes
+`dist/` to GitHub Pages on every push to the working branch, so a push is a
+deploy:
 
     https://hopexhash.github.io/Hopex/
 
-### Custom domain — hopexmusic.com
-
-The page's `canonical`, `og:url` and social-image tags already point at
-`https://hopexmusic.com/`. Two steps remain, both outside the repo.
+`vite.config.ts` sets `base: './'` so the same build works both at that
+sub-path and at the apex domain. Do **not** switch it to an absolute path.
 
 > **Do not add a `CNAME` file.** This site publishes from a custom Actions
 > workflow, and GitHub ignores `CNAME` in that mode — the domain lives in the
 > repository's Pages settings instead.
 
-**1. DNS, at whoever the domain is registered with.** Add all four A records
-(and the AAAA records if IPv6 is offered):
+### Custom domain — hopexmusic.com
 
-| Type | Name | Value |
-| --- | --- | --- |
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153` |
-| AAAA | `@` | `2606:50c0:8001::153` |
-| AAAA | `@` | `2606:50c0:8002::153` |
-| AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `hopexhash.github.io` |
+DNS is already correct (A records to `185.199.108–111.153`, `www` CNAME to
+`hopexhash.github.io`). **The domain is currently claimed by another GitHub
+account** — a dangling-DNS takeover, because DNS pointed at Pages while the
+hostname was still unclaimed. Until that is undone, nothing deployed here is
+visible at hopexmusic.com. The fix, in order:
 
-Delete any existing A or parking record on `@` first, or the old one wins.
-
-**2. GitHub.** Settings → Pages → Custom domain → `hopexmusic.com` → Save.
-Wait for the DNS check to pass, then tick **Enforce HTTPS**. The certificate can
-take up to an hour; until it is issued the site may warn as insecure, which is
-expected and clears on its own.
-
-With the apex set as the custom domain, GitHub redirects `www` to it
-automatically.
-
-Any other static host works too — Netlify, Vercel and Cloudflare Pages all take
-the folder as-is with no build command and publish directory `.`
-
----
+1. https://github.com/settings/pages → **Add a domain** → `hopexmusic.com`.
+   GitHub gives a `_github-pages-challenge-hopexhash` TXT record.
+2. Add that TXT record in Cloudflare, then click **Verify**. Verifying forcibly
+   releases the hostname from whichever account is holding it.
+3. Repo → Settings → Pages → Custom domain → `hopexmusic.com` → Save, then tick
+   **Enforce HTTPS** once the certificate is issued.
+4. Remove `sarahslotgacor@gmail.com` from the Search Console property.
 
 ## Notes
 
-- **One screen, no scroll.** The page is `min-height: 100svh` and centred.
-  Verified at 390x844 and 1440x900: the document is exactly the viewport height.
-- **The background.** Four blurred orbs (violet, cyan, rose) drift on 26–36
-  second loops with real travel, so the motion is visible without being busy.
-  An earlier pass ran them at 68–92s over short distances, which just read as a
-  static image.
-- **Reduced motion is honoured without gutting the page.** Travel stops — orbs
-  hold still, the mark stops hovering, entrances land instantly — but the
-  sparkles keep their opacity-only twinkle and every glow stays. A blanket
-  `animation: none` left the site looking dead to anyone with Reduce Motion on,
-  which on iOS is a lot of people.
-- **Icons only.** No captions anywhere. The platform name lives in `aria-label`
-  and in a tooltip shown on hover *and* keyboard focus, so the label is never
-  lost to sighted or screen-reader visitors.
-- Dark by default with a toggle top-right; the choice is stored in
-  `localStorage`, otherwise the OS preference decides. Light is a real second
-  palette, not an inversion.
-- Below 560px the icon row becomes a 4x2 grid — left to wrap it read 5+3.
+- **The headline is measured, not sized.** `FitText` probes the text at 100px
+  and scales to the container width. A fixed `vw` size can't work: the right
+  value depends on the character count and on how wide the face is, so Kanit and
+  the fallback need different numbers. It re-measures on `fonts.ready` and on
+  resize. Two things it gets right that are easy to get wrong — the measured
+  span is `inline-block` (a block span is clamped to the container, so every
+  measurement comes back equal to the space available and nothing ever fits),
+  and it holds no React state (the probe size would stick whenever the computed
+  result matched the previous state and React skipped the re-render).
 - **Fonts load non-blocking.** As a plain stylesheet the Google Fonts link held
   first paint hostage to `fonts.googleapis.com` — 12.8s when that host was
-  unreachable against 260ms when it answered.
-- The `HOPEX` logotype is stretched with `scaleX`, which multiplies the
-  element's *box* rather than its text. It needs `width: fit-content` or it
-  silently overflows the viewport on a phone.
-- `404.html`, `robots.txt` and `sitemap.xml` are in the repo root.
-
-### Verified
-
-Audited with axe-core (WCAG 2.1 AA + best practice) at 390px and 1440px in both
-themes: no violations. No horizontal or vertical overflow. Booking address, all
-eight platform links, the theme toggle and the reduced-motion path verified in a
-real browser.
+  unreachable against ~200ms when it answered. Now `preload` +
+  `media="print"` + `onload`, with a `<noscript>` fallback.
+- **Framer Motion writes inline `transform`**, which silently cancels Tailwind
+  translate utilities on the same element. Anything centred with
+  `-translate-x-1/2` needs a plain wrapper around the `motion` element.
+- **Reduced motion is honoured without gutting the page.** `Magnet` opts out
+  entirely; travel stops. A blanket `animation: none` left the site looking dead
+  to anyone with Reduce Motion on, which on iOS is a lot of people.
+- The `.hero-heading` gradient is `background-clip: text` with a transparent
+  fill, so the text has no real colour — check contrast against the gradient's
+  darkest stop, not against a computed value.
+- The 21 tiles in `public/assets/art/` are generated abstract artwork, not
+  photographs of real work.
