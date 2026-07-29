@@ -2,6 +2,8 @@ import FadeIn from '../components/FadeIn';
 import Magnet from '../components/Magnet';
 import FitText from '../components/FitText';
 import { ContactButton } from '../components/Buttons';
+import RemoteImg from '../components/RemoteImg';
+import { HERO_PORTRAIT } from '../assets';
 
 const NAV = [
   { label: 'About', href: '#about' },
@@ -54,11 +56,12 @@ export default function HeroSection() {
         <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[280px] -translate-x-1/2 -translate-y-1/2 sm:bottom-0 sm:top-auto sm:w-[360px] sm:translate-y-0 md:w-[440px] lg:w-[520px]">
           <FadeIn delay={0.6} y={30}>
             <Magnet padding={150} strength={3} activeTransition="transform 0.3s ease-out" inactiveTransition="transform 0.6s ease-in-out">
-              <img
-                src="./assets/img/hopex-mark.webp"
+              {/* Spec's hero portrait. To go back to the HOPEX monogram,
+                  point src at './assets/img/hopex-mark.webp'. */}
+              <RemoteImg
+                src={HERO_PORTRAIT}
+                fallback="./assets/img/hopex-mark.webp"
                 alt=""
-                width={320}
-                height={320}
                 className="w-full"
                 style={{ filter: 'drop-shadow(0 0 60px rgba(187, 204, 215, 0.35))' }}
               />

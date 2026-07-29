@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import { LiveProjectButton } from '../components/Buttons';
+import RemoteImg from '../components/RemoteImg';
+import { PROJECT_IMAGES } from '../assets';
 
 const PROJECTS = [
   {
@@ -9,21 +11,24 @@ const PROJECTS = [
     kind: 'Release',
     name: 'Conquer',
     href: 'https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO',
-    images: ['./assets/art/work-01.webp', './assets/art/work-02.webp', './assets/art/work-03.webp'],
+    images: PROJECT_IMAGES[0],
+    fallbacks: ['./assets/art/work-01.webp', './assets/art/work-02.webp', './assets/art/work-03.webp'],
   },
   {
     n: '02',
     kind: 'Release',
     name: 'Inferno',
     href: 'https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO',
-    images: ['./assets/art/work-04.webp', './assets/art/work-05.webp', './assets/art/work-06.webp'],
+    images: PROJECT_IMAGES[1],
+    fallbacks: ['./assets/art/work-04.webp', './assets/art/work-05.webp', './assets/art/work-06.webp'],
   },
   {
     n: '03',
     kind: 'Release',
     name: 'Fuego',
     href: 'https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO',
-    images: ['./assets/art/work-07.webp', './assets/art/work-08.webp', './assets/art/work-09.webp'],
+    images: PROJECT_IMAGES[2],
+    fallbacks: ['./assets/art/work-07.webp', './assets/art/work-08.webp', './assets/art/work-09.webp'],
   },
 ];
 
@@ -55,11 +60,11 @@ function Card({ p, index, total, progress }: { p: (typeof PROJECTS)[number]; ind
 
         <div className="flex gap-3 sm:gap-4">
           <div className="flex w-[40%] flex-col gap-3 sm:gap-4">
-            <img src={p.images[0]} alt="" loading="lazy" className="w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" style={{ height: 'clamp(130px, 16vw, 230px)' }} />
-            <img src={p.images[1]} alt="" loading="lazy" className="w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" style={{ height: 'clamp(160px, 22vw, 340px)' }} />
+            <RemoteImg src={p.images[0]} fallback={p.fallbacks[0]} alt="" loading="lazy" className="w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" style={{ height: 'clamp(130px, 16vw, 230px)' }} />
+            <RemoteImg src={p.images[1]} fallback={p.fallbacks[1]} alt="" loading="lazy" className="w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" style={{ height: 'clamp(160px, 22vw, 340px)' }} />
           </div>
           <div className="w-[60%]">
-            <img src={p.images[2]} alt="" loading="lazy" className="h-full w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" />
+            <RemoteImg src={p.images[2]} fallback={p.fallbacks[2]} alt="" loading="lazy" className="h-full w-full rounded-[40px] object-cover sm:rounded-[50px] md:rounded-[60px]" />
           </div>
         </div>
       </motion.article>
