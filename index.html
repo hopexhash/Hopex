@@ -46,6 +46,13 @@
   var KEY = 'hopex:recovered';
   var done = false;
 
+  /* React's createRoot() clears the container, so the static fallback markup
+     disappearing is the signal that the app took over. Counting children of
+     #root would not work — the fallback is a child. */
+  function mounted() {
+    return !document.getElementById('fallback');
+  }
+
   function recover() {
     if (done) return;
     done = true;
@@ -64,21 +71,21 @@
   addEventListener('error', function (e) {
     var t = e.target;
     if (!t || t.tagName !== 'SCRIPT') return;
-    var root = document.getElementById('root');
-    if (root && root.children.length) return;
+    if (mounted()) return;
     recover();
   }, true);
 
   addEventListener('load', function () {
-    if (document.getElementById('root').children.length) {
-      done = true;
-      try { sessionStorage.removeItem(KEY); } catch (e) {}
-      // Mounted fine — take the cache-busting query back out of the address bar.
-      if (location.search) history.replaceState(null, '', location.pathname);
-      return;
-    }
+    // The module script is deferred, so give React a moment before judging.
     setTimeout(function () {
-      if (!document.getElementById('root').children.length) recover();
+      if (mounted()) {
+        done = true;
+        try { sessionStorage.removeItem(KEY); } catch (e) {}
+        // Mounted — take the cache-busting query back out of the address bar.
+        if (location.search) history.replaceState(null, '', location.pathname);
+      } else {
+        recover();
+      }
     }, 4000);
   });
 })();
@@ -120,7 +127,26 @@
 </script>
 </head>
 <body>
-  <div id="root"></div>
+  <!-- Static fallback. createRoot() clears these children on mount, so this is
+       only ever seen when the app does not start — a bundle that 404s, a
+       blocked script, a JS error. Previously that state rendered pure black on
+       a black background, which is indistinguishable from a dead site. Styles
+       are inline so it survives the stylesheet failing too. -->
+  <div id="root">
+    <div id="fallback" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:40px 20px;font-family:'Kanit',system-ui,sans-serif;background:#0C0C0C;color:#D7E2EA;text-align:center">
+      <h1 style="font-size:clamp(2.5rem,12vw,7rem);font-weight:900;letter-spacing:-0.02em;margin:0">HOPEX</h1>
+      <p style="margin:0;text-transform:uppercase;letter-spacing:0.2em;font-size:14px;opacity:.6">Producer &amp; DJ — Amsterdam</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:560px">
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://open.spotify.com/artist/0dE2azLipjakJifWO2xrOO">Spotify</a>
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://music.apple.com/us/artist/hopex/1211296904">Apple Music</a>
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://soundcloud.com/prodhopex">SoundCloud</a>
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://www.beatport.com/artist/hopex/704053">Beatport</a>
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://www.youtube.com/@HOPEX">YouTube</a>
+        <a style="padding:14px 22px;border:1px solid rgba(215,226,234,.25);border-radius:999px;color:#D7E2EA;text-decoration:none" href="https://www.instagram.com/prodhopex/">Instagram</a>
+      </div>
+      <a style="color:#D7E2EA;text-decoration:underline;text-underline-offset:6px" href="mailto:prodhopex@gmail.com">prodhopex@gmail.com</a>
+    </div>
+  </div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
