@@ -1,21 +1,36 @@
-import HeroSection from './sections/HeroSection';
-import MarqueeSection from './sections/MarqueeSection';
-import AboutSection from './sections/AboutSection';
-import ServicesSection from './sections/ServicesSection';
-import ProjectsSection from './sections/ProjectsSection';
-import FooterSection from './sections/FooterSection';
+import Backdrop from './components/Backdrop';
+import Ticker from './components/Ticker';
+import Hero from './sections/Hero';
+import Music from './sections/Music';
+import About from './sections/About';
+import Listen from './sections/Listen';
+import Booking from './sections/Booking';
+
+const WORDS = ['Electronic', 'Trap', 'Future Bass', 'Amsterdam', 'Producer', 'DJ'];
 
 export default function App() {
   return (
-    <div style={{ background: '#0C0C0C', overflowX: 'clip' }}>
-      <main>
-        <HeroSection />
-        <MarqueeSection />
-        <AboutSection />
-        <ServicesSection />
-        <ProjectsSection />
-      </main>
-      <FooterSection />
+    <div id="top" style={{ background: 'var(--ink)', overflowX: 'clip' }}>
+      <Backdrop />
+
+      {/* Everything above the fixed backdrop. */}
+      <div className="relative z-10">
+        <Hero />
+
+        <div className="border-y border-[color:var(--mist)]/10 py-5 sm:py-7" style={{ background: 'rgba(255,255,255,0.02)' }}>
+          <Ticker items={WORDS} seconds={30} className="text-[color:var(--mist)]/70" />
+        </div>
+
+        <Music />
+        <About />
+
+        <div className="border-y border-[color:var(--mist)]/10 py-5 sm:py-7" style={{ background: 'rgba(255,255,255,0.02)' }}>
+          <Ticker items={WORDS} reverse seconds={38} className="text-[color:var(--mist)]/40" />
+        </div>
+
+        <Listen />
+        <Booking />
+      </div>
     </div>
   );
 }
